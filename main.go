@@ -20,17 +20,18 @@ func main() {
     }
     defer response.Body.Close()
     body, err := ioutil.ReadAll(response.Body)
+
     if err != nil {
         fmt.Println("Error")
         return
     }
-    apiData := (body)
+    apiData := string(body)
 
     http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) { // Lunch a new page for the lose condition
         tmpl := template.Must(template.ParseFiles("./templates/index.html")) // Read the home page
         data := struct {
-			ApiData []string
-		}{
+			ApiData []string 
+		}{ 
 			ApiData: []string{string(apiData)},
 		}
         tmpl.Execute(w, data)
