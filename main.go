@@ -29,8 +29,10 @@ var jsonList []dataApi
 var artistData []string
 
 func main() {
-	// css := http.FileServer(http.Dir("style"))                // For add css to the html pages
-	// http.Handle("/style/", http.StripPrefix("/style/", css)) // For add css to the html pages
+	css := http.FileServer(http.Dir("style")) // For add css to the html pages
+	http.Handle("/style/", http.StripPrefix("/style/", css))
+	img := http.FileServer(http.Dir("images"))                 // For add css to the html pages
+	http.Handle("/images/", http.StripPrefix("/images/", img)) // For add css to the html pages
 	url := "https://groupietrackers.herokuapp.com/api/artists"
 	response, err := http.Get(url)
 	if err != nil {
@@ -52,7 +54,7 @@ func main() {
 	apiData := artistData[0]
 	fmt.Println(apiData)
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) { // Lunch a new page for the lose condition
-		tmpl := template.Must(template.ParseFiles("./templates/home.html")) // Read the home page
+		tmpl := template.Must(template.ParseFiles("./templates/hom.html")) // Read the home page
 		data := base{
 			apiData,
 		}
