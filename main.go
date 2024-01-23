@@ -8,10 +8,11 @@ import (
 	"text/template"
 )
 
-var port = ":8080"
+var port = ":8888"
 
 type base struct {
-	ApiData string
+	ApiImage []string
+	ApiName  []string
 }
 
 type dataApi struct {
@@ -26,7 +27,8 @@ type dataApi struct {
 }
 
 var jsonList []dataApi
-var artistData []string
+var artistImage []string
+var artistName []string
 
 func main() {
 	// css := http.FileServer(http.Dir("style"))                // For add css to the html pages
@@ -44,21 +46,24 @@ func main() {
 		return
 	}
 	json.Unmarshal(body, &jsonList)
-	// j := map[string]any{}
-	for _, artist := range jsonList {
-		artistData = append(artistData, artist.Images)
+	for _, artistImg := range jsonList {
+		artistImage = append(artistImage, artistImg.Images)
 	}
+	for _, artistNa := range jsonList {
+		artistName = append(artistName, artistNa.Images)
+	}
+	apiImage := artistImage[0:51]
+	apiName := artistName[0:51]
 
-	apiData := artistData[0]
-	fmt.Println(apiData)
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) { // Lunch a new page for the lose condition
 		tmpl := template.Must(template.ParseFiles("./templates/home.html")) // Read the home page
 		data := base{
-			apiData,
+			apiImage,
+			apiName,
 		}
 		tmpl.Execute(w, data)
 	})
 
-	fmt.Println("http://localhost:8080") // Creat clickable link in the terminal
+	fmt.Println("http://localhost:8888") // Creat clickable link in the terminal
 	http.ListenAndServe(port, nil)
 }

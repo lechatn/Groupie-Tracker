@@ -8,6 +8,9 @@
 <body>
     <h1>Coucou</h1>
     <!-- <p>{{.ApiData}}</p> -->
-    <img src="{{.ApiData}}">
+    {{range .ApiImage}}
+    <img src="{{.}}">
+    <p></p>
+    {{end}}
 </body>
 </html>
