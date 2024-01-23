@@ -27,6 +27,7 @@ type dataApi struct {
 
 var jsonList []dataApi
 var artistData []string
+var nameArtist []string
 
 func main() {
 	// css := http.FileServer(http.Dir("style"))                // For add css to the html pages
@@ -43,20 +44,31 @@ func main() {
 		fmt.Println("Error")
 		return
 	}
-	json.Unmarshal(body, &jsonList)
-	// j := map[string]any{}
-	for _, artist := range jsonList {
-		artistData = append(artistData, artist.Images)
+	errUnmarshall := json.Unmarshal(body, &jsonList)
+	if errUnmarshall != nil {
+		fmt.Println("Error")
+		return
 	}
+	// j := map[string]any{}
 
-	apiData := artistData[0]
-	fmt.Println(apiData)
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) { // Lunch a new page for the lose condition
-		tmpl := template.Must(template.ParseFiles("./templates/home.html")) // Read the home page
-		data := base{
-			apiData,
-		}
-		tmpl.Execute(w, data)
+		tHome := template.Must(template.ParseFiles("./templates/home.html")) // Read the home page^
+		tHome.Execute(w, jsonList)
+	})
+
+	http.HandleFunc("/artistes", func(w http.ResponseWriter, r *http.Request) {
+		tArtistes := template.Must(template.ParseFiles("./templates/artistes.html")) // Read the home page
+		tArtistes.Execute(w, nil)
+	})
+
+	http.HandleFunc("/dates", func(w http.ResponseWriter, r *http.Request) {
+		tDates := template.Must(template.ParseFiles("./templates/dates.html")) // Read the home page
+		tDates.Execute(w, nil)
+	})
+
+	http.HandleFunc("/location", func(w http.ResponseWriter, r *http.Request) {
+		tLocation := template.Must(template.ParseFiles("./templates/location.html")) // Read the home page
+		tLocation.Execute(w, nil)
 	})
 
 	fmt.Println("http://localhost:8080") // Creat clickable link in the terminal

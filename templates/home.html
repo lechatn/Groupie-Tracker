@@ -7,10 +7,18 @@
 </head>  
 <body>
     <nav class="apagnan">
-        <a href="home.html"> ACCUEIL </a>
-        <a href="artistes.html"> ARTISTES </a>
-        <a href="dates.html"> DATES </a>
-        <a href="location.html"> LOCATION </a>
+        <a href="/"> ACCUEIL </a>
+        <a href="/artistes"> ARTISTES </a>
+        <a href="/dates"> DATES </a>
+        <a href="/location"> LOCATION </a>
+        <section class="artistes">
+            <ul>
+                {{range .}}
+                    <img src="{{.Images}}" alt="image">
+                    <p>{{.Name}}</p>
+                {{end}}
+            </ul>
+        </section> 
         <input class ="search" type="text" placeholder="Search for apagnan">
     </nav>
 </body>                      
