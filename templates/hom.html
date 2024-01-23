@@ -4,20 +4,15 @@
     <meta charset="UTF-8">
     <title> Accueil </title>
     <link rel="stylesheet" href="../style/style.css">
-<<<<<<< HEAD
-</head>  
-<body>
-    <nav class="apagnan">
-        <a href="home.html"> ACCUEIL </a>
-        <a href="artistes.html"> ARTISTES </a>
-        <a href="dates.html"> DATES </a>
-        <a href="location.html"> LOCATION </a>
-        <input class ="search" type="text" placeholder="Search for apagnan">
-    </nav>
-</body>                      
-=======
 </head>
 <body>
+  <header>
+  <section class="input">
+    <input class="search" type="text" placeholder="Search for an artist">
+  </section>
+  </header>
+    <img class ="logo" src="../images/logo.jpeg" alt="groupie logo">
+  <section class="menuham">
   <section class="menu">
     <input type="checkbox" id="hamburger">
     <label id="hamburger-logo" for="hamburger">☰</label>
@@ -27,7 +22,17 @@
       <a href="artistes.html">Artistes</a>
       <a href="location.html">Location</a>
     </nav>
-    <input type="text" placeholder="Search for an artist">
-</section>
+  </section>
+  </section>
+  <footer>
+    <section class="artistes">
+      <ul>
+          {{range .}}
+              <img src="{{.Images}}" alt="image">
+              <p>{{.Name}}</p>
+          {{end}}
+      </ul>
+  </section>
+  </footer>
 </body>
->>>>>>> nino
+</html>
