@@ -30,14 +30,17 @@ var artistData []string
 var nameArtist []string
 
 func main() {
-	// css := http.FileServer(http.Dir("style"))                // For add css to the html pages
-	// http.Handle("/style/", http.StripPrefix("/style/", css)) // For add css to the html pages
+	css := http.FileServer(http.Dir("style"))                // For add css to the html pages
+	http.Handle("/style/", http.StripPrefix("/style/", css)) // For add css to the html pages
+	img := http.FileServer(http.Dir("images"))               // For add css to the html pages
+	http.Handle("/images/", http.StripPrefix("/images/", img))
 	url := "https://groupietrackers.herokuapp.com/api/artists"
 	response, err := http.Get(url)
 	if err != nil {
 		fmt.Println("Error")
 		return
 	}
+
 	defer response.Body.Close()
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
