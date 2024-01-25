@@ -30,7 +30,9 @@
           {{range .}}
               <img src="{{.Images}}" alt="image">
               <p>{{.Name}}</p>
-              <p>{{.Members}}</p>
+              {{range .Members}}
+                <p>{{.}}</p>
+              {{end}}
               <p>{{.CreationDate}}</p>
               <p>{{.FirstAlbum}}</p>
           {{end}}
