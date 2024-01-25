@@ -27,14 +27,21 @@
   <footer>
     <section class="artistes">
       <ul>
+        <p>{{range .Artists}}</p>
+        <p>{{.}}</p>
+        {{end}}
+      </ul>
+      <!-- <ul>
           {{range .}}
               <img src="{{.Images}}" alt="image">
               <p>{{.Name}}</p>
-              <p>{{.Members}}</p>
+              <p>{{range .Members}}</p>
+                <p>{{.}}</p>
+              {{end}}
               <p>{{.CreationDate}}</p>
               <p>{{.FirstAlbum}}</p>
           {{end}}
-      </ul>
+      </ul> -->
   </section>
   </footer>
 </body>

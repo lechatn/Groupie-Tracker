@@ -26,30 +26,28 @@ type dataApi struct {
 }
 
 var jsonList []dataApi
-var artistData []string
-var nameArtist []string
 
 func main() {
 	css := http.FileServer(http.Dir("style"))                // For add css to the html pages
 	http.Handle("/style/", http.StripPrefix("/style/", css)) // For add css to the html pages
 	img := http.FileServer(http.Dir("images"))               // For add css to the html pages
 	http.Handle("/images/", http.StripPrefix("/images/", img))
-	url := "https://groupietrackers.herokuapp.com/api/artists"
+	url := "https://groupietrackers.herokuapp.com/api"
 	response, err := http.Get(url)
 	if err != nil {
-		fmt.Println("Error")
+		fmt.Println("Error1")
 		return
 	}
 
 	defer response.Body.Close()
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		fmt.Println("Error")
+		fmt.Println("Error2")
 		return
 	}
 	errUnmarshall := json.Unmarshal(body, &jsonList)
 	if errUnmarshall != nil {
-		fmt.Println("Error")
+		fmt.Println("Error3")
 		return
 	}
 
