@@ -5,34 +5,29 @@
     <title> Accueil </title>
     <link rel="stylesheet" href="../style/style.css">
 </head>
-<body>
-  <header>
-  <section class="input">
-    <input class="search" type="text" placeholder="Search for an artist">
-  </section>
-  </header>
-    <img class ="logo" src="../images/logo.jpeg" alt="groupie logo">
-  <section class="menuham">
-  <section class="menu">
-    <input type="checkbox" id="hamburger">
-    <label id="hamburger-logo" for="hamburger">☰</label>
-    <nav>
-      <a href="home.html">Page d'accueil</a>
-      <a href="dates.html">Dates</a>
-      <a href="artistes.html">Artistes</a>
-      <a href="location.html">Location</a>
-    </nav>
-  </section>
-  </section>
-  <footer>
-    <section class="artistes">
-      <ul>
-          {{range .}}
-              <img src="{{.Images}}" alt="image">
-              <p>{{.Name}}</p>
+<body background="../images/aurelien.png">
+<header class="global_header">
+  <input class="search" type="text" placeholder="Search for an artist">
+
+<section class="color">
+  <nav class="nav">
+    <a href="../templates/hom.html"> Accueil </a>
+    <a href="../templates/dates.html"> Dates </a>
+    <a href="../templates/artistes.html"> Artistes </a>
+    <a href="../templates/location.html"> Location </a> 
+  </nav> 
+</section>
+<img class="logo" src="../images/logo.png" alt="logo">
+</header>
+<main>  
+  <section class="images">
+    <ul>
+      {{range .}}
+      <img src="{{.Images}}" alt="image">          
+      <p>{{.Name}}</p>
           {{end}}
-      </ul>
+    </ul>
   </section>
-  </footer>
+</main>
 </body>
 </html>

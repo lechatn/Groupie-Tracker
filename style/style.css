@@ -1,90 +1,58 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  }
+body  {
+  background: no-repeat;
 
-
-  .menuham {
-    margin-top: -3.5rem;
-  }
-
-  .menu {
-    width: 0px;
-  }
-  
-  #hamburger {
-    display: none;
-  }
-  
-  #hamburger-logo {
-    cursor: pointer;
-    background: rgb(185, 185, 185);
-    width: 200px;
-    display: block;
-    color: white;
-    text-align: right;
-    transform: translateX(-168px);
-    padding: 10px;
-  }
-  
-  nav {
-    display: flex;
-    flex-direction: column;
-    background: rgb(205, 201, 201);
-    height: 60rem;
-    overflow: hidden;
-    width: 200px;
-    transform: translateX(-200px);
-    gap: 10%;
-    font-size: 1.2rem;
-  }
-  
-  #hamburger-logo,
-  nav {
-    transition: 0.7s;
-  }
-  
-
-  #hamburger:checked ~ #hamburger-logo,
-  #hamburger:checked ~ nav {
-    transform: translate(0);
-  }
-  
-  nav a {
-    color: white;
-    text-decoration: underline;
-    padding: 10px;
-  }
-  
-  nav a:hover {
-    background: #444;
-  }
-
-  .a {
-    margin-top: 10%;
-  }
-  
+}
 .search {
 display: flex;
 justify-content: center;
 align-items: center;
 padding: 0.75rem;
 width: 30%;
-margin-left: 35rem;
+margin-left: 32rem;
 border-radius: 20px;
 border: none;
 background-color: rgba(223, 223, 223, 0.833);
 }
 
-.input  {
+nav  a{ /* tous les liens a à l'intérieur de la balise nav */
   display: flex;
-  margin-top: 1rem;
-}
+  justify-content: center;
+  float: left; /* effet flottant */
+  text-decoration: none; /* pas d'héritage avec effet souligné */
+  color: #ffffff; /* couleur du texte */
+  background: #000000; /* couleur de fond */
+  height: 36px; /* hauteur */
+  line-height: 33px; /* interligne */
+  padding: 0 10px; /* marges intérieur */
+  font-family: sans-serif; /* police d'écriture */
+  font-size: 13px; /* taille du texte */
+  transition: .5s; /* temps de transition lors du hover : une demi seconde */
+  width: 10rem;
+  }
+
+  nav  a:hover{ /* tous liens lors du survol dans la balise nav */
+  background: #f43c80; /* couleur de fond */
+  }
+  
+  .color {
+    margin-left: 25rem;
+    display: grid;
+    margin-top: 2rem;
+  }
+
 
 .logo {
-  display: flex;
-  justify-content: right;
+  display: grid;
   align-items: right;
   width: 10rem;
   height: 10rem;
+  border-radius: 80px;
+  margin-left: 80rem;
+  margin-top: -6rem;
+}
+
+
+.images img {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
 }
