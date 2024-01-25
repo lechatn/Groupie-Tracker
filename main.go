@@ -11,8 +11,7 @@ import (
 var port = ":8888"
 
 type base struct {
-	ApiImage []string
-	ApiName  []string
+	ApiLocation []string
 }
 
 type dataApi struct {
@@ -22,8 +21,8 @@ type dataApi struct {
 	CreationDate int      `json:"creationDate"`
 	FirstAlbum   string   `json:"firstAlbum"`
 	Locations    string   `json:"locations"`
-	ConcertDate  string   `json:"concertDate"`
-	Relation     string   `json:"relation"`
+	ConcertDates string   `json:"concertDates"`
+	Relations    string   `json:"relations"`
 }
 
 var jsonList []dataApi
@@ -53,10 +52,9 @@ func main() {
 		fmt.Println("Error")
 		return
 	}
-	// j := map[string]any{}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) { // Lunch a new page for the lose condition
-		tHome := template.Must(template.ParseFiles("./templates/home.html")) // Read the home page^
+		tHome := template.Must(template.ParseFiles("./templates/home.html")) // Read the home page
 		tHome.Execute(w, jsonList)
 	})
 
