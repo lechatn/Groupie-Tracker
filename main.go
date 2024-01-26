@@ -12,7 +12,7 @@ import (
 
 var port = ":8768"
 
-type artists struct {
+type Artist struct {
 	IdArtists    int      `json:"id"`
 	Images       string   `json:"image"`
 	Name         string   `json:"name"`
@@ -21,31 +21,31 @@ type artists struct {
 	FirstAlbum   string   `json:"firstAlbum"`
 }
 
-type dataLocation struct {
+type DataLocation struct {
 	Locations []string `json:"locations"`
 	Id        int      `json:"id"`
 	Dates     string   `json:"dates"`
 }
 
 
-type dates struct {
+type Dates struct {
 	Index   []string `json:"index"`
 	IdDates int      `json:"id"`
 	Dates   []string `json:"dates"`
 }
 
-type datesAndArtists struct {
-	listArtists []artists
-	listDates   []dates
+type DatesAndArtists struct {
+	Artist Artist
+	Dates   Dates
 }
 
-var jsonList_Artists []artists
+var jsonList_Artists []Artist
 var homeData map[string]interface{}
 
 // ///////////////////////////////////////////
 
-var jsonList_Dates []dates
-var homeDates map[string][]dates
+var jsonList_Dates []Dates
+var homeDates map[string][]Dates
 
 func main() {
 	css := http.FileServer(http.Dir("style"))                // For add css to the html pages
@@ -123,20 +123,32 @@ func main() {
 		return
 	}
 	jsonList_Dates = homeDates["index"]
-	fmt.Println(jsonList_Dates)
+	//fmt.Println(jsonList_Dates)
 
 	////////////////////////////////////////////////////////////////////////////////////
 
 	listArtists := jsonList_Artists
 	listDates := jsonList_Dates
-	data := datesAndArtists{
-		listArtists,
-		listDates,
+	var Data []DatesAndArtists
+
+	for i:=0; i<len(listArtists); i++{
+		for j:=0; j<len(listDates); j++{
+			if listArtists[i].IdArtists == listDates[j].IdDates{
+				var inter DatesAndArtists
+				inter.Artist = listArtists[i]
+				inter.Dates = listDates[j]
+				Data = append(Data, inter)
+				//fmt.Println(inter)	
+			}
+			continue
+		}
 	}
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) { // Lunch a new page for the lose condition
-		tHome := template.Must(template.ParseFiles("./templates/home.html")) // Read the home page
-		tHome.Execute(w, data)
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		tHome := template.Must(template.ParseFiles("./templates/home.html"))
+		//fmt.Println(Data)
+		tHome.Execute(w, Data)
 	})
 
 	http.HandleFunc("/artistes", func(w http.ResponseWriter, r *http.Request) {

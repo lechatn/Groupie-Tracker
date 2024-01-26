@@ -26,34 +26,16 @@
   </section>
   <footer>
     <section class="artistes">
-      <ul>
-          {{range .Art}}
-            <img src="{{.Images}}" alt="image">
-            <p>{{.IdArtists}}</p>
-            <p>{{.Name}}</p>
-            {{range .Members}}
-              <p>{{.}}</p>
-            {{end}}
-            <p>{{.CreationDate}}</p>
-            <p>{{.FirstAlbum}}</p>
-          {{end}}
-          <!--------------------------------------------------------->
-          {{range .Dat}}
-          <p>{{.IdDates}}</p>
-          {{range .Dates}}
-            <p>{{.}}</p>
-          {{end}}
-          <br>
-        {{end}}
-      </ul>
-
-      <p>test</p>
       {{range .}}
-        {{range .Location}}
-            <p>{{.}}</p>
-            <br>
+        {{.Artist.IdArtists}}
+        <img src="{{.Artist.Images}}" alt={{.Artist.Name}}>   
+        <p>{{.Artist.Name}}</p>
+        {{range .Artist.Members}}
+          <p>{{.}}</p>
         {{end}}
-      <br>
+        {{range .Dates.Dates}}
+          <p>{{.}}</p>
+        {{end}}
       {{end}}
   </section>
   </footer>
