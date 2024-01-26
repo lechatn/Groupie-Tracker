@@ -17,36 +17,29 @@
     <input type="checkbox" id="hamburger">
     <label id="hamburger-logo" for="hamburger">☰</label>
     <nav>
-      <a href="home.html">Page d'accueil</a>
-      <a href="dates.html">Dates</a>
-      <a href="artistes.html">Artistes</a>
-      <a href="location.html">Location</a>
+      <a href="home">Page d'accueil</a>
+      <a href="dates">Dates</a>
+      <a href="artistes">Artistes</a>
+      <a href="location">Location</a>
     </nav>
   </section>
   </section>
   <footer>
     <section class="artistes">
-      <ul>
-          
-      </ul>
-      <!-- {{range .Art}}
-            <img src="{{.Images}}" alt="image">
-            <p>{{.IdArtists}}</p>
-            <p>{{.Name}}</p>
-            {{range .Members}}
-              <p>{{.}}</p>
-            {{end}}
-            <p>{{.CreationDate}}</p>
-            <p>{{.FirstAlbum}}</p>
-          {{end}} -->
-          <!--------------------------------------------------------->
-          <!-- {{range .Dat}}
-          <p>{{.IdDates}}</p>
-          {{range .Dates}}
-            <p>{{.}}</p>
-          {{end}}
-          <br>
-        {{end}} -->
+      {{range .}}
+        {{.Artist.IdArtists}}
+        <img src="{{.Artist.Images}}" alt={{.Artist.Name}}>   
+        <p>{{.Artist.Name}}</p>
+        {{range .Artist.Members}}
+          <p>{{.}}</p>
+        {{end}}
+        {{range .Dates.Dates}}
+          <p>{{.}}</p>
+        {{end}}
+      {{end}}
+      {{range .}}
+        <p>{{.Locations.Locations}}</p>
+      {{end}}
   </section>
   </footer>
 </body>
