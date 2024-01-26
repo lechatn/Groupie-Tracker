@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title> Accueil </title>
-    <link rel="stylesheet" href="../style/style.css">
+  <meta charset="UTF-8">
+  <title> Accueil </title>
+  <link rel="stylesheet" href="../style/style.css">
 </head>
-<body background="../images/aurelien.png">
+<body class="back" background="../images/back(1).jpg">
 <header class="global_header">
-  <input class="search" type="text" placeholder="Search for an artist">
-
 <section class="color">
   <nav class="nav">
     <a href="../templates/hom.html"> Accueil </a>
@@ -16,18 +14,31 @@
     <a href="../templates/artistes.html"> Artistes </a>
     <a href="../templates/location.html"> Location </a> 
   </nav> 
+ <input class="search" type="text" placeholder="Search for an artist">
 </section>
 <img class="logo" src="../images/logo.png" alt="logo">
 </header>
-<main>  
-  <section class="images">
-    <ul>
-      {{range .}}
-      <img src="{{.Images}}" alt="image">          
-      <p>{{.Name}}</p>
-          {{end}}
-    </ul>
-  </section>
+<main>
+<a>
+  <span>G</span>
+  <span>R</span>
+  <span>O</span>
+  <span>U</span>
+  <span>P</span>
+  <span>I</span>
+  <span>E</span>
+  <span>_</span>
+  <span>T</span>
+  <span>R</span>
+  <span>A</span>
+  <span>C</span>
+  <span>K</span>
+  <span>E</span>
+  <span>R</span>
+</a>
+<h1>Bonjour, et bienvenue <br> sur le site de Groupie-Tracker</h1>
+<h3> Retrouvez ici vos artistes préférés, <br> leurs albums et leurs dates de concerts. </h3>
+
 </main>
 </body>
 </html>
