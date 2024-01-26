@@ -39,6 +39,11 @@ type Locations struct {
 	Locations []string `json:"locations"`
 }
 
+type Relations struct {
+	Id 	  int      `json:"id"`
+	DateLocation map[string][]string `json:"dateLocations"`	
+}
+
 type DatesAndArtists struct {
 	Artist Artist
 	Dates   Dates
@@ -46,12 +51,20 @@ type DatesAndArtists struct {
 
 }
 
-var jsonList_Artists []Artist
 var homeData map[string]interface{}
+
+var jsonList_Artists []Artist
+
 var jsonList_Location []Locations
+var allLocation map[string][]Locations
+
 var jsonList_Dates []Dates
 var homeDates map[string][]Dates
-var allLocation map[string][]Locations
+
+var jsonList_Relations []Relations
+var allRelations map[string][]Relations
+
+
 
 // ///////////////////////////////////////////
 
@@ -89,7 +102,7 @@ func main() {
 	url_Artists := homeData["artists"].(string)
 	url_Locations := homeData["locations"].(string)
 	url_Dates := homeData["dates"].(string)
-	//url_Relations := generalData["relation"].(string)
+	url_Relations := homeData["relation"].(string)
 
 	/// ////////////////////////////////////////////////////////////////////Partie artsites
 	response_Artists, err := http.Get(url_Artists)
@@ -136,30 +149,56 @@ func main() {
 	////////////////////////////////////////////////////////////////////////////////////
 
 
-		////////////////////////////////////////////////////////////////////////////////////
-		response_Location, err := http.Get(url_Locations)
-		if err != nil {
-			fmt.Println("Error7")
-			return
-		}
-	
-		defer response_Location.Body.Close()
-	
-		body_Location, err := io.ReadAll(response_Location.Body)
-		if err != nil {
-			fmt.Println("Error8")
-			return
-		}
-	
-		errUnmarshall4 := json.Unmarshal(body_Location, &allLocation)
-		if errUnmarshall4 != nil {
-			fmt.Println("Error9")
-			return
-		}
-		jsonList_Location = allLocation["index"]
-		//fmt.Println(jsonList_Dates)
-	
-		////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
+	response_Location, err := http.Get(url_Locations)
+	if err != nil {
+		fmt.Println("Error7")
+		return
+	}
+
+	defer response_Location.Body.Close()
+
+	body_Location, err := io.ReadAll(response_Location.Body)
+	if err != nil {
+		fmt.Println("Error8")
+		return
+	}
+
+	errUnmarshall4 := json.Unmarshal(body_Location, &allLocation)
+	if errUnmarshall4 != nil {
+		fmt.Println("Error9")
+		return
+	}
+	jsonList_Location = allLocation["index"]
+	//fmt.Println(jsonList_Dates)
+
+	////////////////////////////////////////////////////////////////////////////////////
+
+
+	/// ////////////////////////////////////////////////////////////////////Partie artsites
+	response_Relations, err := http.Get(url_Relations)
+	if err != nil {
+		fmt.Println("Error4")
+		return
+	}
+
+	defer response_Relations.Body.Close()
+
+	body_Relations, err := io.ReadAll(response_Relations.Body)
+	if err != nil {
+		fmt.Println("Error5")
+		return
+	}
+
+	errUnmarshall5 := json.Unmarshal(body_Relations, &allRelations)
+	if errUnmarshall5 != nil {
+		fmt.Println("Error6")
+		return
+	}
+	fmt.Println(allRelations)
+	jsonList_Relations = allRelations["index"]
+
+	////////////////////////////////////////////////////////////////////////////////////
 
 	listArtists := jsonList_Artists
 	listDates := jsonList_Dates
