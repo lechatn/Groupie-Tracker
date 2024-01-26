@@ -5,14 +5,15 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"text/template"
 )
-var port = ":8888"
 
-type dataArtist struct {
-	Id           int      `json:"id"`
+var port = ":8768"
+
+type artists struct {
+	IdArtists    int      `json:"id"`
 	Images       string   `json:"image"`
 	Name         string   `json:"name"`
 	Members      []string `json:"members"`
@@ -27,10 +28,24 @@ type dataLocation struct {
 }
 
 
-var jsonList_Artists []dataArtist
-var generalData map[string]interface{}
-var jsonList_Locations dataLocation
-var test map[string][]dataLocation
+type dates struct {
+	Index   []string `json:"index"`
+	IdDates int      `json:"id"`
+	Dates   []string `json:"dates"`
+}
+
+type datesAndArtists struct {
+	listArtists []artists
+	listDates   []dates
+}
+
+var jsonList_Artists []artists
+var homeData map[string]interface{}
+
+// ///////////////////////////////////////////
+
+var jsonList_Dates []dates
+var homeDates map[string][]dates
 
 func main() {
 	css := http.FileServer(http.Dir("style"))                // For add css to the html pages
@@ -49,13 +64,13 @@ func main() {
 	}
 	defer response_General.Body.Close()
 
-	body_General, err := ioutil.ReadAll(response_General.Body)
+	body_General, err := io.ReadAll(response_General.Body)
 	if err != nil {
 		fmt.Println("Error2")
 		return
 	}
 
-	errUnmarshall := json.Unmarshal(body_General, &generalData)
+	errUnmarshall := json.Unmarshal(body_General, &homeData)
 	if errUnmarshall != nil {
 		fmt.Println("Error3")
 		return
@@ -63,10 +78,10 @@ func main() {
 
 	////////////////////////////////////////////////////////////////////////
 
-	url_Artists := generalData["artists"].(string)
-	url_Locations := generalData["locations"].(string)
-	//url_Dates := generalData["dates"].(string)
-	url_Relations := generalData["relation"].(string)
+	url_Artists := homeData["artists"].(string)
+	//url_Locations := generalData["locations"].(string)
+	url_Dates := homeData["dates"].(string)
+	//url_Relations := generalData["relation"].(string)
 
 	/// ////////////////////////////////////////////////////////////////////Partie artsites
 	response_Artists, err := http.Get(url_Artists)
@@ -74,9 +89,10 @@ func main() {
 		fmt.Println("Error4")
 		return
 	}
+
 	defer response_Artists.Body.Close()
 
-	body_Artists, err := ioutil.ReadAll(response_Artists.Body)
+	body_Artists, err := io.ReadAll(response_Artists.Body)
 	if err != nil {
 		fmt.Println("Error5")
 		return
@@ -86,95 +102,59 @@ func main() {
 		fmt.Println("Error6")
 		return
 	}
-
-	////////////////////////////////////////////////////////////////////////
-
-	response_Locartions, err := http.Get(url_Locations)
+	////////////////////////////////////////////////////////////////////////////////////
+	response_Dates, err := http.Get(url_Dates)
 	if err != nil {
 		fmt.Println("Error7")
 		return
 	}
-	defer response_Locartions.Body.Close()
 
-	body_Locations, err := ioutil.ReadAll(response_Locartions.Body)
+	defer response_Dates.Body.Close()
+
+	body_Dates, err := io.ReadAll(response_Dates.Body)
 	if err != nil {
 		fmt.Println("Error8")
 		return
 	}
 
-	//fmt.Println(string(body_Locations))
-
-	errUnmarshall3 := json.Unmarshal(body_Locations, &test)
+	errUnmarshall3 := json.Unmarshal(body_Dates, &homeDates)
 	if errUnmarshall3 != nil {
 		fmt.Println("Error9")
 		return
 	}
-	jsonList_Locations := test["index"]
-	//fmt.Println(jsonList_Locations)
+	jsonList_Dates = homeDates["index"]
+	fmt.Println(jsonList_Dates)
 
-	////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
 
-	response_Relations, err := http.Get(url_Relations)
-	if err != nil {
-		fmt.Println("Error7")
-		return
-	}
-	defer response_Relations.Body.Close()
-
-	body_Relations, err := ioutil.ReadAll(response_Relations.Body)
-	if err != nil {
-		fmt.Println("Error8")
-		return
+	listArtists := jsonList_Artists
+	listDates := jsonList_Dates
+	data := datesAndArtists{
+		listArtists,
+		listDates,
 	}
 
-	fmt.Println(string(body_Relations))
-
-	errUnmarshall7 := json.Unmarshal(body_Relations, &test)
-	if errUnmarshall7 != nil {
-		fmt.Println("Error9")
-		return
-	}
-	jsonList_Relations := test["index"]
-	fmt.Println(jsonList_Relations)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	////////////////////////////////////////////////////////////////////////////
-
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		tHome, _ := template.ParseFiles("./templates/home.html")
-		tHome.Execute(w, jsonList_Artists)
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) { // Lunch a new page for the lose condition
+		tHome := template.Must(template.ParseFiles("./templates/home.html")) // Read the home page
+		tHome.Execute(w, data)
 	})
 
 	http.HandleFunc("/artistes", func(w http.ResponseWriter, r *http.Request) {
-		tArtistes := template.Must(template.ParseFiles("./templates/artistes.html"))
+		tArtistes := template.Must(template.ParseFiles("./templates/artistes.html")) // Read the artists page
 		tArtistes.Execute(w, nil)
 	})
 
 	http.HandleFunc("/dates", func(w http.ResponseWriter, r *http.Request) {
-		tDates, _ := template.ParseFiles("./templates/dates.html") // Read the home page
+		tDates := template.Must(template.ParseFiles("./templates/dates.html")) // Read the dates page
 		tDates.Execute(w, nil)
 	})
 
 	http.HandleFunc("/location", func(w http.ResponseWriter, r *http.Request) {
-		tLocation := template.Must(template.ParseFiles("./templates/location.html")) // Read the home page
-		tLocation.Execute(w, jsonList_Locations)
+		tLocation := template.Must(template.ParseFiles("./templates/location.html")) // Read the location page
+		tLocation.Execute(w, nil)
 	})
 
-	fmt.Println("http://localhost:8888") // Creat clickable link in the terminal
+	fmt.Println("http://localhost:8768") // Creat clickable link in the terminal
 	http.ListenAndServe(port, nil)
 
 }
