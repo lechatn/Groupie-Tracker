@@ -29,8 +29,12 @@ type dates struct {
 }
 
 type datesAndArtists struct {
-	listArtists []artists
-	listDates   []dates
+	ListArtists []artists
+	ListDates   []dates
+}
+
+type datesWhiteArtists struct {
+	ListDatesArtists []datesAndArtists
 }
 
 var jsonList_Artists []artists
@@ -117,16 +121,18 @@ func main() {
 		return
 	}
 	jsonList_Dates = homeDates["index"]
-	fmt.Println(jsonList_Dates)
 
 	////////////////////////////////////////////////////////////////////////////////////
 
 	listArtists := jsonList_Artists
 	listDates := jsonList_Dates
-	data := datesAndArtists{
-		listArtists,
-		listDates,
+
+	var listDatesArtists []datesAndArtists
+
+	data := datesWhiteArtists{
+		listDatesArtists,
 	}
+	fmt.Println(data)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) { // Lunch a new page for the lose condition
 		tHome := template.Must(template.ParseFiles("./templates/home.html")) // Read the home page
@@ -148,7 +154,7 @@ func main() {
 		tLocation.Execute(w, nil)
 	})
 
-	fmt.Println("http://localhost:8768") // Creat clickable link in the terminal
+	fmt.Println("http://localhost" + port) // Creat clickable link in the terminal
 	http.ListenAndServe(port, nil)
 
 }
