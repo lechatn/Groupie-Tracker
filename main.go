@@ -34,18 +34,26 @@ type Dates struct {
 	Dates   []string `json:"dates"`
 }
 
+type Locations struct {
+	Id 	  int      `json:"id"`
+	Locations []string `json:"locations"`
+}
+
 type DatesAndArtists struct {
 	Artist Artist
 	Dates   Dates
+	Locations Locations
+
 }
 
 var jsonList_Artists []Artist
 var homeData map[string]interface{}
-
-// ///////////////////////////////////////////
-
+var jsonList_Location []Locations
 var jsonList_Dates []Dates
 var homeDates map[string][]Dates
+var allLocation map[string][]Locations
+
+// ///////////////////////////////////////////
 
 func main() {
 	css := http.FileServer(http.Dir("style"))                // For add css to the html pages
@@ -79,7 +87,7 @@ func main() {
 	////////////////////////////////////////////////////////////////////////
 
 	url_Artists := homeData["artists"].(string)
-	//url_Locations := generalData["locations"].(string)
+	url_Locations := homeData["locations"].(string)
 	url_Dates := homeData["dates"].(string)
 	//url_Relations := generalData["relation"].(string)
 
@@ -127,18 +135,48 @@ func main() {
 
 	////////////////////////////////////////////////////////////////////////////////////
 
+
+		////////////////////////////////////////////////////////////////////////////////////
+		response_Location, err := http.Get(url_Locations)
+		if err != nil {
+			fmt.Println("Error7")
+			return
+		}
+	
+		defer response_Location.Body.Close()
+	
+		body_Location, err := io.ReadAll(response_Location.Body)
+		if err != nil {
+			fmt.Println("Error8")
+			return
+		}
+	
+		errUnmarshall4 := json.Unmarshal(body_Location, &allLocation)
+		if errUnmarshall4 != nil {
+			fmt.Println("Error9")
+			return
+		}
+		jsonList_Location = allLocation["index"]
+		//fmt.Println(jsonList_Dates)
+	
+		////////////////////////////////////////////////////////////////////////////////////
+
 	listArtists := jsonList_Artists
 	listDates := jsonList_Dates
+	listLocations := jsonList_Location
 	var Data []DatesAndArtists
 
 	for i:=0; i<len(listArtists); i++{
 		for j:=0; j<len(listDates); j++{
 			if listArtists[i].IdArtists == listDates[j].IdDates{
-				var inter DatesAndArtists
-				inter.Artist = listArtists[i]
-				inter.Dates = listDates[j]
-				Data = append(Data, inter)
-				//fmt.Println(inter)	
+				if listLocations[j].Id == listDates[j].IdDates{
+					var inter DatesAndArtists
+					inter.Artist = listArtists[i]
+					inter.Dates = listDates[j]
+					inter.Locations = listLocations[j]
+					Data = append(Data, inter)
+					//fmt.Println(inter)
+				}	
 			}
 			continue
 		}
