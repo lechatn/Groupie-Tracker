@@ -10,7 +10,7 @@ import (
 
 var port = ":8768"
 
-type dataApi struct {
+type artists struct {
 	IdArtists    int      `json:"id"`
 	Images       string   `json:"image"`
 	Name         string   `json:"name"`
@@ -22,27 +22,24 @@ type dataApi struct {
 	Relations    string   `json:"relations"`
 }
 
-type datesData struct {
+type dates struct {
 	Index   []string `json:"index"`
 	IdDates int      `json:"id"`
 	Dates   []string `json:"dates"`
 }
 
-type base struct {
-	Art []dataApi
-	Dat []datesData
+type datesAndArtists struct {
+	listArtists []artists
+	listDates   []dates
 }
 
-// var art []dataApi
-// var dat []datesData
-
-var jsonList_Artists []dataApi
-var generalData map[string]interface{}
+var jsonList_Artists []artists
+var homeData map[string]interface{}
 
 // ///////////////////////////////////////////
 
-var jsonList_Dates []datesData
-var dataDates map[string][]datesData
+var jsonList_Dates []dates
+var homeDates map[string][]dates
 
 func main() {
 	css := http.FileServer(http.Dir("style"))                // For add css to the html pages
@@ -67,7 +64,7 @@ func main() {
 		return
 	}
 
-	errUnmarshall := json.Unmarshal(body_General, &generalData)
+	errUnmarshall := json.Unmarshal(body_General, &homeData)
 	if errUnmarshall != nil {
 		fmt.Println("Error3")
 		return
@@ -75,9 +72,9 @@ func main() {
 
 	////////////////////////////////////////////////////////////////////////
 
-	url_Artists := generalData["artists"].(string)
+	url_Artists := homeData["artists"].(string)
 	//url_Locations := generalData["locations"].(string)
-	url_Dates := generalData["dates"].(string)
+	url_Dates := homeData["dates"].(string)
 	//url_Relations := generalData["relation"].(string)
 
 	/// ////////////////////////////////////////////////////////////////////Partie artsites
@@ -91,18 +88,18 @@ func main() {
 
 	body_Artists, err := io.ReadAll(response_Artists.Body)
 	if err != nil {
-		fmt.Println("Error6")
+		fmt.Println("Error5")
 		return
 	}
 	errUnmarshall2 := json.Unmarshal(body_Artists, &jsonList_Artists)
 	if errUnmarshall2 != nil {
-		fmt.Println("Error7")
+		fmt.Println("Error6")
 		return
 	}
 	////////////////////////////////////////////////////////////////////////////////////
 	response_Dates, err := http.Get(url_Dates)
 	if err != nil {
-		fmt.Println("Error4")
+		fmt.Println("Error7")
 		return
 	}
 
@@ -110,28 +107,29 @@ func main() {
 
 	body_Dates, err := io.ReadAll(response_Dates.Body)
 	if err != nil {
-		fmt.Println("Error6")
+		fmt.Println("Error8")
 		return
 	}
 
-	errUnmarshall3 := json.Unmarshal(body_Dates, &dataDates)
+	errUnmarshall3 := json.Unmarshal(body_Dates, &homeDates)
 	if errUnmarshall3 != nil {
-		fmt.Println("Error7")
+		fmt.Println("Error9")
 		return
 	}
+	jsonList_Dates = homeDates["index"]
+	fmt.Println(jsonList_Dates)
 
 	////////////////////////////////////////////////////////////////////////////////////
 
-	jsonList_Dates = dataDates["index"]
-	art := jsonList_Artists
-	dat := jsonList_Dates
+	listArtists := jsonList_Artists
+	listDates := jsonList_Dates
+	data := datesAndArtists{
+		listArtists,
+		listDates,
+	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) { // Lunch a new page for the lose condition
 		tHome := template.Must(template.ParseFiles("./templates/home.html")) // Read the home page
-		data := base{
-			art,
-			dat,
-		}
 		tHome.Execute(w, data)
 	})
 
