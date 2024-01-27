@@ -10,7 +10,7 @@ import (
 	"text/template"
 )
 
-var port = ":8768"
+// Define all the struct and some variables
 
 type Artist struct {
 	IdArtists    int      `json:"id"`
@@ -64,7 +64,7 @@ var homeDates map[string][]Dates
 var jsonList_Relations []Relations
 var allRelations map[string][]Relations
 
-
+var port = ":8768"
 
 // ///////////////////////////////////////////
 
@@ -123,7 +123,7 @@ func main() {
 		fmt.Println("Error6")
 		return
 	}
-	////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////// 
 	response_Dates, err := http.Get(url_Dates)
 	if err != nil {
 		fmt.Println("Error7")
@@ -200,31 +200,10 @@ func main() {
 
 	////////////////////////////////////////////////////////////////////////////////////
 
-	listArtists := jsonList_Artists
-	listDates := jsonList_Dates
-	listLocations := jsonList_Location
-	var Data []DatesAndArtists
-
-	for i:=0; i<len(listArtists); i++{
-		for j:=0; j<len(listDates); j++{
-			if listArtists[i].IdArtists == listDates[j].IdDates{
-				if listLocations[j].Id == listDates[j].IdDates{
-					var inter DatesAndArtists
-					inter.Artist = listArtists[i]
-					inter.Dates = listDates[j]
-					inter.Locations = listLocations[j]
-					Data = append(Data, inter)
-					//fmt.Println(inter)
-				}	
-			}
-			continue
-		}
-	}
-
+	Data := createData(jsonList_Artists,jsonList_Dates,jsonList_Location)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		tHome := template.Must(template.ParseFiles("./templates/home.html"))
-		//fmt.Println(Data)
 		tHome.Execute(w, Data)
 	})
 
@@ -246,4 +225,26 @@ func main() {
 	fmt.Println("http://localhost:8768") // Creat clickable link in the terminal
 	http.ListenAndServe(port, nil)
 
+}
+
+
+func createData(jsonList_Artists []Artist, jsonList_Dates []Dates, jsonList_Location []Locations) []DatesAndArtists{
+	var Data []DatesAndArtists
+
+	for i:=0; i<len(jsonList_Artists); i++{
+		for j:=0; j<len(jsonList_Dates); j++{
+			if jsonList_Artists[i].IdArtists == jsonList_Dates[j].IdDates{
+				if jsonList_Location[j].Id == jsonList_Dates[j].IdDates{
+					var inter DatesAndArtists
+					inter.Artist = jsonList_Artists[i]
+					inter.Dates = jsonList_Dates[j]
+					inter.Locations = jsonList_Location[j]
+					Data = append(Data, inter)
+					//fmt.Println(inter)
+				}	
+			}
+			continue
+		}
+	}
+	return Data
 }
