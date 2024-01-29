@@ -1,7 +1,5 @@
 package main
 
-
-
 import (
 	"encoding/json"
 	"fmt"
@@ -27,7 +25,6 @@ type DataLocation struct {
 	Dates     string   `json:"dates"`
 }
 
-
 type Dates struct {
 	Index   []string `json:"index"`
 	IdDates int      `json:"id"`
@@ -35,15 +32,14 @@ type Dates struct {
 }
 
 type Locations struct {
-	Id 	  int      `json:"id"`
+	Id        int      `json:"id"`
 	Locations []string `json:"locations"`
 }
 
 type DatesAndArtists struct {
-	Artist Artist
-	Dates   Dates
+	Artist    Artist
+	Dates     Dates
 	Locations Locations
-
 }
 
 var jsonList_Artists []Artist
@@ -131,61 +127,57 @@ func main() {
 		return
 	}
 	jsonList_Dates = homeDates["index"]
+
+	////////////////////////////////////////////////////////////////////////////////////
+
+	////////////////////////////////////////////////////////////////////////////////////
+	response_Location, err := http.Get(url_Locations)
+	if err != nil {
+		fmt.Println("Error7")
+		return
+	}
+
+	defer response_Location.Body.Close()
+
+	body_Location, err := io.ReadAll(response_Location.Body)
+	if err != nil {
+		fmt.Println("Error8")
+		return
+	}
+
+	errUnmarshall4 := json.Unmarshal(body_Location, &allLocation)
+	if errUnmarshall4 != nil {
+		fmt.Println("Error9")
+		return
+	}
+	jsonList_Location = allLocation["index"]
 	//fmt.Println(jsonList_Dates)
 
 	////////////////////////////////////////////////////////////////////////////////////
 
-
-		////////////////////////////////////////////////////////////////////////////////////
-		response_Location, err := http.Get(url_Locations)
-		if err != nil {
-			fmt.Println("Error7")
-			return
-		}
-	
-		defer response_Location.Body.Close()
-	
-		body_Location, err := io.ReadAll(response_Location.Body)
-		if err != nil {
-			fmt.Println("Error8")
-			return
-		}
-	
-		errUnmarshall4 := json.Unmarshal(body_Location, &allLocation)
-		if errUnmarshall4 != nil {
-			fmt.Println("Error9")
-			return
-		}
-		jsonList_Location = allLocation["index"]
-		//fmt.Println(jsonList_Dates)
-	
-		////////////////////////////////////////////////////////////////////////////////////
-
 	listArtists := jsonList_Artists
 	listDates := jsonList_Dates
+	noStars(listDates)
 	listLocations := jsonList_Location
 	var Data []DatesAndArtists
 
-	for i:=0; i<len(listArtists); i++{
-		for j:=0; j<len(listDates); j++{
-			if listArtists[i].IdArtists == listDates[j].IdDates{
-				if listLocations[j].Id == listDates[j].IdDates{
+	for i := 0; i < len(listArtists); i++ {
+		for j := 0; j < len(listDates); j++ {
+			if listArtists[i].IdArtists == listDates[j].IdDates {
+				if listLocations[j].Id == listDates[j].IdDates {
 					var inter DatesAndArtists
 					inter.Artist = listArtists[i]
 					inter.Dates = listDates[j]
 					inter.Locations = listLocations[j]
 					Data = append(Data, inter)
-					//fmt.Println(inter)
-				}	
+				}
 			}
 			continue
 		}
 	}
 
-
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		tHome := template.Must(template.ParseFiles("./templates/home.html"))
-		//fmt.Println(Data)
 		tHome.Execute(w, Data)
 	})
 
@@ -207,4 +199,21 @@ func main() {
 	fmt.Println("http://localhost" + port) // Creat clickable link in the terminal
 	http.ListenAndServe(port, nil)
 
+}
+
+func noStars(p []Dates) []any {
+	var slice []string
+	var d []any
+	for _, i := range p {
+		slice = i.Dates
+	}
+	if slice[0][0] == 42 {
+		slice[0] = slice[0][1:]
+		fmt.Println(slice[0:2])
+
+	}
+	for _, j := range slice {
+		d = append(d, j)
+	}
+	return d
 }
