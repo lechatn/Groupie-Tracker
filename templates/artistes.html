@@ -2,6 +2,21 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<title> Artistes </title>
 </head>
 <body>
+    <ul>
+        {{range .Art}}
+          <img class="artistes" src="{{.Images}}" alt="image">
+          <p>{{.IdArtists}}</p>
+          <p>{{.Name}}</p>
+            {{range .Members}}
+              <p>{{.}}</p>
+            {{end}}
+      <section class="dates">
+          <p>{{.CreationDate}}</p>
+          <p>{{.FirstAlbum}}</p>
+        {{end}}
+      </section>
+      </ul>
 </body>
