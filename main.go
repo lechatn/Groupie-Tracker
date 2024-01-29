@@ -37,8 +37,8 @@ type Locations struct {
 }
 
 type Relations struct {
-	Id 	  int      					 `json:"id"`
-	DateLocation map[string][]string `json:"datesLocations"`	
+	Id           int                 `json:"id"`
+	DateLocation map[string][]string `json:"datesLocations"`
 }
 
 type DatesAndArtists struct {
@@ -46,7 +46,6 @@ type DatesAndArtists struct {
 	Dates     Dates
 	Locations Locations
 	Relations Relations
-
 }
 
 var homeData map[string]interface{}
@@ -121,7 +120,7 @@ func main() {
 		fmt.Println("Error6")
 		return
 	}
-	//////////////////////////////////////////////////////////////////////////////////// 
+	////////////////////////////////////////////////////////////////////////////////////
 	response_Dates, err := http.Get(url_Dates)
 	if err != nil {
 		fmt.Println("Error7")
@@ -170,7 +169,6 @@ func main() {
 
 	////////////////////////////////////////////////////////////////////////////////////
 
-
 	/// ////////////////////////////////////////////////////////////////////Partie artsites
 	response_Relations, err := http.Get(url_Relations)
 	if err != nil {
@@ -191,20 +189,21 @@ func main() {
 		fmt.Println("Error6")
 		return
 	}
-	
+
 	jsonList_Relations = allRelations["index"]
-	fmt.Println(jsonList_Relations)
 	////////////////////////////////////////////////////////////////////////////////////
 
-	Data := createData(jsonList_Artists,jsonList_Dates,jsonList_Location,jsonList_Relations)
+	Data := createData(jsonList_Artists, jsonList_Dates, jsonList_Location, jsonList_Relations)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		tHome := template.Must(template.ParseFiles("./templates/home.html"))
+		fmt.Println(r.FormValue("Checked"))
 		tHome.Execute(w, Data)
 	})
 
 	http.HandleFunc("/artistes", func(w http.ResponseWriter, r *http.Request) {
 		tArtistes := template.Must(template.ParseFiles("./templates/artistes.html")) // Read the artists page
+
 		tArtistes.Execute(w, nil)
 	})
 
@@ -223,25 +222,23 @@ func main() {
 
 }
 
-
-func createData(jsonList_Artists []Artist, jsonList_Dates []Dates, jsonList_Location []Locations, jsonRelations []Relations) []DatesAndArtists{
+func createData(jsonList_Artists []Artist, jsonList_Dates []Dates, jsonList_Location []Locations, jsonRelations []Relations) []DatesAndArtists {
 	var Data []DatesAndArtists
 
-	for i:=0; i<len(jsonList_Artists); i++{
-		for j:=0; j<len(jsonList_Dates); j++{
-			if jsonList_Artists[i].IdArtists == jsonList_Dates[j].IdDates{
-				if jsonList_Location[j].Id == jsonList_Dates[j].IdDates{
-					if jsonList_Artists[i].IdArtists == jsonRelations[i].Id{
+	for i := 0; i < len(jsonList_Artists); i++ {
+		for j := 0; j < len(jsonList_Dates); j++ {
+			if jsonList_Artists[i].IdArtists == jsonList_Dates[j].IdDates {
+				if jsonList_Location[j].Id == jsonList_Dates[j].IdDates {
+					if jsonList_Artists[i].IdArtists == jsonRelations[i].Id {
 						var inter DatesAndArtists
 						inter.Artist = jsonList_Artists[i]
 						inter.Dates = jsonList_Dates[j]
 						inter.Locations = jsonList_Location[j]
 						inter.Relations = jsonList_Relations[i]
 						Data = append(Data, inter)
-					//fmt.Println(inter)
 					}
-					
-				}	
+
+				}
 			}
 			continue
 		}
