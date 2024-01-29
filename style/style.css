@@ -165,3 +165,18 @@ a:active span:after {
   transition-delay: 0 !important;
 }
 
+ .artistes {
+  display: inline-flex;
+  justify-content: space-between;
+  align-content: center;
+  margin-top: 15rem;
+  gap: 10rem;
+}
+
+.artistes :hover {
+  border: solid 5px rgb(255, 199, 58);
+  border-radius: 50px;
+  scale: (1.1);
+  transition: 0.3s;
+} 
+

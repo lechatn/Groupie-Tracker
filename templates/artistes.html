@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title> Artistes </title>
 </head>
 <body>
-    <ul>
+    <ul class="artistes">
         {{range .Art}}
-          <img class="artistes" src="{{.Images}}" alt="image">
+          <img src="{{.Images}}" alt="image">
           <p>{{.IdArtists}}</p>
           <p>{{.Name}}</p>
             {{range .Members}}
