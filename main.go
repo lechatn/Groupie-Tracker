@@ -40,14 +40,15 @@ type Locations struct {
 }
 
 type Relations struct {
-	Id 	  int      `json:"id"`
-	DateLocation map[string][]string `json:"dateLocations"`	
+	Id 	  int      					 `json:"id"`
+	DateLocation map[string][]string `json:"datesLocations"`	
 }
 
 type DatesAndArtists struct {
 	Artist Artist
 	Dates   Dates
 	Locations Locations
+	Relations Relations
 
 }
 
@@ -195,12 +196,12 @@ func main() {
 		fmt.Println("Error6")
 		return
 	}
-	fmt.Println(allRelations)
+	
 	jsonList_Relations = allRelations["index"]
-
+	fmt.Println(jsonList_Relations)
 	////////////////////////////////////////////////////////////////////////////////////
 
-	Data := createData(jsonList_Artists,jsonList_Dates,jsonList_Location)
+	Data := createData(jsonList_Artists,jsonList_Dates,jsonList_Location,jsonList_Relations)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		tHome := template.Must(template.ParseFiles("./templates/home.html"))
@@ -219,7 +220,7 @@ func main() {
 
 	http.HandleFunc("/location", func(w http.ResponseWriter, r *http.Request) {
 		tLocation := template.Must(template.ParseFiles("./templates/location.html")) // Read the location page
-		tLocation.Execute(w, nil)
+		tLocation.Execute(w, jsonList_Relations)
 	})
 
 	fmt.Println("http://localhost:8768") // Creat clickable link in the terminal
@@ -228,19 +229,23 @@ func main() {
 }
 
 
-func createData(jsonList_Artists []Artist, jsonList_Dates []Dates, jsonList_Location []Locations) []DatesAndArtists{
+func createData(jsonList_Artists []Artist, jsonList_Dates []Dates, jsonList_Location []Locations, jsonRelations []Relations) []DatesAndArtists{
 	var Data []DatesAndArtists
 
 	for i:=0; i<len(jsonList_Artists); i++{
 		for j:=0; j<len(jsonList_Dates); j++{
 			if jsonList_Artists[i].IdArtists == jsonList_Dates[j].IdDates{
 				if jsonList_Location[j].Id == jsonList_Dates[j].IdDates{
-					var inter DatesAndArtists
-					inter.Artist = jsonList_Artists[i]
-					inter.Dates = jsonList_Dates[j]
-					inter.Locations = jsonList_Location[j]
-					Data = append(Data, inter)
+					if jsonList_Artists[i].IdArtists == jsonRelations[i].Id{
+						var inter DatesAndArtists
+						inter.Artist = jsonList_Artists[i]
+						inter.Dates = jsonList_Dates[j]
+						inter.Locations = jsonList_Location[j]
+						inter.Relations = jsonList_Relations[i]
+						Data = append(Data, inter)
 					//fmt.Println(inter)
+					}
+					
 				}	
 			}
 			continue

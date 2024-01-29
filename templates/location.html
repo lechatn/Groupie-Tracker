@@ -7,11 +7,11 @@
 </head>
 <body>
     {{range .}}
-        <p>{{.Id}}</p>
-        {{range .Locations}}
-           <p>{{.}}</p>
+    {{.Id}}
+        {{range $key, $value := .DateLocation}}
+            <p>{{$key}}</p>
+            <p>{{$value}}</p>
         {{end}}
-    <br>
     {{end}}
 </body>
 </html>

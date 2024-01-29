@@ -40,6 +40,18 @@
         <p>{{.}}</p>
         {{end}}
       {{end}}
+      <p>test des relations</p>
+      {{range .}}
+      {{.Relations.Id}}
+        {{range $key, $value := .Relations.DateLocation}}
+            <p>{{$key}}</p>
+            {{range $value := $value}}
+              <p>{{.}}</p>
+            {{end}}
+            <br>
+        {{end}}
+        <br>
+      {{end}}
   </section>
   </footer>
 </body>
