@@ -1,62 +1,57 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <title> Accueil </title>
     <link rel="stylesheet" href="../style/style.css">
 </head>
+
 <body>
-  <header>
-  <section class="input">
-    <form>
-       <label for="Check"></label>
-      <input class="search" type="text" name="Check" placeholder="Search for an artist">
-      <input type="submit" value="Search">
-    </form>  
-  </section>
-  </header>
-    <img class ="logo" src="../images/logo.jpeg" alt="groupie logo">
-  <section class="menuham">
-  <section class="menu">
-    <input type="checkbox" id="hamburger">
-    <label id="hamburger-logo" for="hamburger">☰</label>
-    <nav>
-      <a href="home">Page d'accueil</a>
-      <a href="dates">Dates</a>
-      <a href="artistes">Artistes</a>
-      <a href="location">Location</a>
-    </nav>
-  </section>
-  </section>
-  <footer>
-    <section class="artistes">
-      {{range .}}
-        {{.Artist.IdArtists}}
-        <img src="{{.Artist.Images}}" alt={{.Artist.Name}}>   
-        <p>{{.Artist.Name}}</p>
-        {{range .Artist.Members}}
-          <p>{{.}}</p>
-        {{end}}
-        {{range .Dates.Dates}}
-          <p>{{.}}</p>
-        {{end}}
-        {{range .Locations.Locations}}
-        <p>{{.}}</p>
-        {{end}}
-      {{end}}
-      <p>test des relations</p>
-      {{range .}}
-      {{.Relations.Id}}
-        {{range $key, $value := .Relations.DateLocation}}
+    <header>
+        <section class="input">
+            <form>
+                <label for="Check"></label>
+                <input class="search" type="text" name="Check" placeholder="Search for an artist">
+                <input type="submit" value="Search">
+            </form>
+        </section>
+    </header>
+    <img class="logo" src="../images/logo.jpeg" alt="groupie logo">
+    <section class="menuham">
+        <section class="menu">
+            <input type="checkbox" id="hamburger">
+            <label id="hamburger-logo" for="hamburger">☰</label>
+            <nav>
+                <a href="home">Page d'accueil</a>
+                <a href="dates">Dates</a>
+                <a href="artistes">Artistes</a>
+                <a href="location">Location</a>
+            </nav>
+        </section>
+    </section>
+    <footer>
+        <section class="artistes">
+            {{range .}} {{.Artist.IdArtists}}
+            <img src="{{.Artist.Images}}" alt={{.Artist.Name}}>
+            <p>{{.Artist.Name}}</p>
+            {{range .Artist.Members}}
+            <p>{{.}}</p>
+            {{end}} {{range .Dates.Dates}}
+            <p>{{.}}</p>
+            {{end}} {{range .Locations.Locations}}
+            <p>{{.}}</p>
+            {{end}} {{end}}
+            <p>test des relations</p>
+            {{range .}} {{.Relations.Id}} {{range $key, $value := .Relations.DateLocation}}
             <p>{{$key}}</p>
             {{range $value := $value}}
-              <p>{{.}}</p>
+            <p>{{.}}</p>
             {{end}}
-            <br>
-        {{end}}
-        <br>
-      {{end}}
-  </section>
-  </footer>
+            <br> {{end}}
+            <br> {{end}}
+        </section>
+    </footer>
 </body>
+
 </html>

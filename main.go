@@ -70,8 +70,10 @@ func main() {
 	fmt.Println()
 	css := http.FileServer(http.Dir("style"))                // For add css to the html pages
 	http.Handle("/style/", http.StripPrefix("/style/", css)) // For add css to the html pages
-	img := http.FileServer(http.Dir("images"))               // For add css to the html pages
+	img := http.FileServer(http.Dir("images"))
 	http.Handle("/images/", http.StripPrefix("/images/", img))
+	js := http.FileServer(http.Dir("js"))
+	http.Handle("/js/", http.StripPrefix("/js/", js))
 
 	url_General := "https://groupietrackers.herokuapp.com/api"
 
@@ -193,6 +195,7 @@ func main() {
 	}
 
 	jsonList_Relations = allRelations["index"]
+
 	////////////////////////////////////////////////////////////////////////////////////
 
 	Data := createData(jsonList_Artists, jsonList_Dates, jsonList_Location, jsonList_Relations)
@@ -204,9 +207,19 @@ func main() {
 		new_data = Data
 	})
 
+	http.HandleFunc("/JavaScript", func(w http.ResponseWriter, r *http.Request) {
+		var vil = "osaka-japan"
+		testeu := struct {
+			Variable string `json:"vill"`
+		}{
+			Variable: vil,
+		}
+		json.NewEncoder(w).Encode(testeu)
+	})
+
 	http.HandleFunc("/artistes", func(w http.ResponseWriter, r *http.Request) {
 		tArtistes := template.Must(template.ParseFiles("./templates/artistes.html")) // Read the artists page
-		tArtistes.Execute(w, nil)
+		tArtistes.Execute(w, Data)
 	})
 
 	http.HandleFunc("/dates", func(w http.ResponseWriter, r *http.Request) {
@@ -299,3 +312,13 @@ func SearchBarMembers(w http.ResponseWriter, r *http.Request, Data []DatesAndArt
 	}
 	return new_data
 }
+
+// func noCountry(country string) string {
+// 	var stock []string
+// 	for _, i := range country {
+// 		stock = append(stock, i)
+// 		if i == '-' {
+
+// 		}
+// 	}
+// }

@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Carte Interactive</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+    <style>
+        #mapid {
+            height: 400px;
+        }
+    </style>
 </head>
+
 <body>
-    {{range .}}
-        <p>{{.Id}}</p>
-        {{range .Locations}}
-           <p>{{.}}</p>
-        {{end}}
-    <br>
-    {{end}}
+    <div id="mapid"></div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="../js/script.js "></script>
 </body>
+
 </html>
