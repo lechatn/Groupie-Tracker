@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"text/template"
 )
 
@@ -66,6 +67,7 @@ var port = ":8768"
 // ///////////////////////////////////////////
 
 func main() {
+	fmt.Println()
 	css := http.FileServer(http.Dir("style"))                // For add css to the html pages
 	http.Handle("/style/", http.StripPrefix("/style/", css)) // For add css to the html pages
 	img := http.FileServer(http.Dir("images"))               // For add css to the html pages
@@ -197,8 +199,9 @@ func main() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		tHome := template.Must(template.ParseFiles("./templates/home.html"))
-		fmt.Println(r.FormValue("Checked"))
-		tHome.Execute(w, Data)
+		new_data := SearchBar(w,r,Data)
+		tHome.Execute(w, new_data)
+		new_data = Data
 	})
 
 	http.HandleFunc("/artistes", func(w http.ResponseWriter, r *http.Request) {
@@ -245,3 +248,26 @@ func createData(jsonList_Artists []Artist, jsonList_Dates []Dates, jsonList_Loca
 	}
 	return Data
 }
+
+func SearchBar(w http.ResponseWriter, r *http.Request, Data []DatesAndArtists) []DatesAndArtists {
+		var new_data []DatesAndArtists
+        lettre := r.FormValue("Check")
+        fmt.Println(lettre)
+		if lettre == "" {
+			return Data
+		}
+		for i := 0; i < len(Data); i++ {
+			for j := 0; j < len(lettre); j++ {
+				if strings.ToUpper(string(Data[i].Artist.Name[j])) == strings.ToUpper(string(lettre[j])){
+					if j == len(lettre)-1 {
+						new_data = append(new_data, Data[i])
+					} else {
+						continue
+					}
+				} else {
+					break
+				}
+			}
+		}
+		return new_data
+	}
