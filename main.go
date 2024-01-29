@@ -199,14 +199,13 @@ func main() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		tHome := template.Must(template.ParseFiles("./templates/home.html"))
-		new_data := SearchBar(w,r,Data)
+		new_data := SearchBarMembers(w, r, Data)
 		tHome.Execute(w, new_data)
 		new_data = Data
 	})
 
 	http.HandleFunc("/artistes", func(w http.ResponseWriter, r *http.Request) {
 		tArtistes := template.Must(template.ParseFiles("./templates/artistes.html")) // Read the artists page
-
 		tArtistes.Execute(w, nil)
 	})
 
@@ -250,17 +249,45 @@ func createData(jsonList_Artists []Artist, jsonList_Dates []Dates, jsonList_Loca
 }
 
 func SearchBar(w http.ResponseWriter, r *http.Request, Data []DatesAndArtists) []DatesAndArtists {
-		var new_data []DatesAndArtists
-        lettre := r.FormValue("Check")
-        fmt.Println(lettre)
-		if lettre == "" {
-			return Data
+	var new_data []DatesAndArtists
+	lettre := r.FormValue("Check")
+	if lettre == "" {
+		return Data
+	}
+	for i := 0; i < len(Data); i++ {
+		for j := 0; j < len(lettre); j++ {
+			if strings.ToUpper(string(Data[i].Artist.Name[j])) == strings.ToUpper(string(lettre[j])) {
+				if j == len(lettre)-1 {
+					new_data = append(new_data, Data[i])
+				} else {
+					continue
+				}
+			} else {
+				break
+			}
 		}
-		for i := 0; i < len(Data); i++ {
+	}
+	return new_data
+}
+
+func SearchBarMembers(w http.ResponseWriter, r *http.Request, Data []DatesAndArtists) []DatesAndArtists {
+	var new_data []DatesAndArtists
+	find := false
+	lettre := r.FormValue("Check")
+	if lettre == "" {
+		return Data
+	}
+	for i := 0; i < len(Data); i++ {
+		for k := 0; k < len(Data[i].Artist.Members); k++ {
+			if find == true {
+				find = false
+				break
+			}
 			for j := 0; j < len(lettre); j++ {
-				if strings.ToUpper(string(Data[i].Artist.Name[j])) == strings.ToUpper(string(lettre[j])){
+				if strings.ToUpper(string(Data[i].Artist.Members[k][j])) == strings.ToUpper(string(lettre[j])) {
 					if j == len(lettre)-1 {
 						new_data = append(new_data, Data[i])
+						find = true
 					} else {
 						continue
 					}
@@ -269,5 +296,6 @@ func SearchBar(w http.ResponseWriter, r *http.Request, Data []DatesAndArtists) [
 				}
 			}
 		}
-		return new_data
 	}
+	return new_data
+}
