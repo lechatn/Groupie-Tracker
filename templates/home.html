@@ -36,9 +36,21 @@
         {{range .Dates.Dates}}
           <p>{{.}}</p>
         {{end}}
+        {{range .Locations.Locations}}
+        <p>{{.}}</p>
+        {{end}}
       {{end}}
+      <p>test des relations</p>
       {{range .}}
-        <p>{{.Locations.Locations}}</p>
+      {{.Relations.Id}}
+        {{range $key, $value := .Relations.DateLocation}}
+            <p>{{$key}}</p>
+            {{range $value := $value}}
+              <p>{{.}}</p>
+            {{end}}
+            <br>
+        {{end}}
+        <br>
       {{end}}
   </section>
   </footer>

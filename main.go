@@ -8,7 +8,7 @@ import (
 	"text/template"
 )
 
-var port = ":8768"
+// Define all the struct and some variables
 
 type Artist struct {
 	IdArtists    int      `json:"id"`
@@ -36,18 +36,33 @@ type Locations struct {
 	Locations []string `json:"locations"`
 }
 
+type Relations struct {
+	Id 	  int      					 `json:"id"`
+	DateLocation map[string][]string `json:"datesLocations"`	
+}
+
 type DatesAndArtists struct {
 	Artist    Artist
 	Dates     Dates
 	Locations Locations
+	Relations Relations
+
 }
 
-var jsonList_Artists []Artist
 var homeData map[string]interface{}
+
+var jsonList_Artists []Artist
+
 var jsonList_Location []Locations
+var allLocation map[string][]Locations
+
 var jsonList_Dates []Dates
 var homeDates map[string][]Dates
-var allLocation map[string][]Locations
+
+var jsonList_Relations []Relations
+var allRelations map[string][]Relations
+
+var port = ":8768"
 
 // ///////////////////////////////////////////
 
@@ -85,7 +100,7 @@ func main() {
 	url_Artists := homeData["artists"].(string)
 	url_Locations := homeData["locations"].(string)
 	url_Dates := homeData["dates"].(string)
-	//url_Relations := generalData["relation"].(string)
+	url_Relations := homeData["relation"].(string)
 
 	/// ////////////////////////////////////////////////////////////////////Partie artsites
 	response_Artists, err := http.Get(url_Artists)
@@ -106,7 +121,7 @@ func main() {
 		fmt.Println("Error6")
 		return
 	}
-	////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////// 
 	response_Dates, err := http.Get(url_Dates)
 	if err != nil {
 		fmt.Println("Error7")
@@ -155,26 +170,33 @@ func main() {
 
 	////////////////////////////////////////////////////////////////////////////////////
 
-	listArtists := jsonList_Artists
-	listDates := jsonList_Dates
-	noStars(listDates)
-	listLocations := jsonList_Location
-	var Data []DatesAndArtists
 
-	for i := 0; i < len(listArtists); i++ {
-		for j := 0; j < len(listDates); j++ {
-			if listArtists[i].IdArtists == listDates[j].IdDates {
-				if listLocations[j].Id == listDates[j].IdDates {
-					var inter DatesAndArtists
-					inter.Artist = listArtists[i]
-					inter.Dates = listDates[j]
-					inter.Locations = listLocations[j]
-					Data = append(Data, inter)
-				}
-			}
-			continue
-		}
+	/// ////////////////////////////////////////////////////////////////////Partie artsites
+	response_Relations, err := http.Get(url_Relations)
+	if err != nil {
+		fmt.Println("Error4")
+		return
 	}
+
+	defer response_Relations.Body.Close()
+
+	body_Relations, err := io.ReadAll(response_Relations.Body)
+	if err != nil {
+		fmt.Println("Error5")
+		return
+	}
+
+	errUnmarshall5 := json.Unmarshal(body_Relations, &allRelations)
+	if errUnmarshall5 != nil {
+		fmt.Println("Error6")
+		return
+	}
+	
+	jsonList_Relations = allRelations["index"]
+	fmt.Println(jsonList_Relations)
+	////////////////////////////////////////////////////////////////////////////////////
+
+	Data := createData(jsonList_Artists,jsonList_Dates,jsonList_Location,jsonList_Relations)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		tHome := template.Must(template.ParseFiles("./templates/home.html"))
@@ -193,7 +215,7 @@ func main() {
 
 	http.HandleFunc("/location", func(w http.ResponseWriter, r *http.Request) {
 		tLocation := template.Must(template.ParseFiles("./templates/location.html")) // Read the location page
-		tLocation.Execute(w, nil)
+		tLocation.Execute(w, jsonList_Relations)
 	})
 
 	fmt.Println("http://localhost" + port) // Creat clickable link in the terminal
@@ -201,19 +223,28 @@ func main() {
 
 }
 
-func noStars(p []Dates) []any {
-	var slice []string
-	var d []any
-	for _, i := range p {
-		slice = i.Dates
-	}
-	if slice[0][0] == 42 {
-		slice[0] = slice[0][1:]
-		fmt.Println(slice[0:2])
 
+func createData(jsonList_Artists []Artist, jsonList_Dates []Dates, jsonList_Location []Locations, jsonRelations []Relations) []DatesAndArtists{
+	var Data []DatesAndArtists
+
+	for i:=0; i<len(jsonList_Artists); i++{
+		for j:=0; j<len(jsonList_Dates); j++{
+			if jsonList_Artists[i].IdArtists == jsonList_Dates[j].IdDates{
+				if jsonList_Location[j].Id == jsonList_Dates[j].IdDates{
+					if jsonList_Artists[i].IdArtists == jsonRelations[i].Id{
+						var inter DatesAndArtists
+						inter.Artist = jsonList_Artists[i]
+						inter.Dates = jsonList_Dates[j]
+						inter.Locations = jsonList_Location[j]
+						inter.Relations = jsonList_Relations[i]
+						Data = append(Data, inter)
+					//fmt.Println(inter)
+					}
+					
+				}	
+			}
+			continue
+		}
 	}
-	for _, j := range slice {
-		d = append(d, j)
-	}
-	return d
+	return Data
 }
