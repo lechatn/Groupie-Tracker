@@ -5,11 +5,13 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
+
 	//"net/url"
 	//"sort"
-	//"strings"
+	"strings"
 	"text/template"
-	//"sort"
+	"sort"
 )
 
 // Define all the struct and some variables
@@ -46,14 +48,6 @@ type Relations struct {
 	DateLocation map[string][]string `json:"datesLocations"`	
 }
 
-type DatesAndArtists struct {
-	Artist    Artist
-	Dates     Dates
-	Locations Locations
-	Relations Relations
-
-}
-
 var homeData map[string]interface{}
 
 var jsonList_Artists []Artist
@@ -68,6 +62,9 @@ var jsonList_Relations []Relations
 var allRelations map[string][]Relations
 
 var port = ":8768"
+
+var artist_create = false
+var originalData []Artist
 
 // ///////////////////////////////////////////
 
@@ -84,7 +81,16 @@ func main() {
 	})
 
 	http.HandleFunc("/artistes", func(w http.ResponseWriter, r *http.Request) {
-		loadArtistes(w, r)
+		if artist_create == false {
+			jsonList_Artists = loadArtistes(w, r)
+			artist_create = true
+			originalData = jsonList_Artists
+		}
+		
+		tArtistes := template.Must(template.ParseFiles("./templates/artistes.html")) // Read the artists page
+		jsonList_Artists = SearchArtist(w, r, jsonList_Artists, originalData)
+		jsonList_Artists = SortData(w, r, jsonList_Artists)
+		tArtistes.Execute(w, jsonList_Artists)
 	})
 
 	http.HandleFunc("/dates", func(w http.ResponseWriter, r *http.Request) {
@@ -105,14 +111,14 @@ func main() {
 }
 
 
-func loadArtistes(w http.ResponseWriter, r *http.Request) {
+func loadArtistes(w http.ResponseWriter, r *http.Request) []Artist {
 	url_Artists := "https://groupietrackers.herokuapp.com/api/artists"
 
 	var jsonList_Artists []Artist
 	response_Artists, err := http.Get(url_Artists)
 	if err != nil {
 		fmt.Println("Error1")
-		return
+		os.Exit(1)
 	}
 
 	defer response_Artists.Body.Close()
@@ -120,18 +126,15 @@ func loadArtistes(w http.ResponseWriter, r *http.Request) {
 	body_Artists, err := io.ReadAll(response_Artists.Body)
 	if err != nil {
 		fmt.Println("Error5")
-		return
+		os.Exit(1)
 	}
 	errUnmarshall1 := json.Unmarshal(body_Artists, &jsonList_Artists)
 	if errUnmarshall1 != nil {
 		fmt.Println("Error6")
-		return
+		os.Exit(1)
 	}
-
+	return jsonList_Artists
 	//fmt.Println(jsonList_Artists)
-
-	tArtistes := template.Must(template.ParseFiles("./templates/artistes.html")) // Read the artists page
-	tArtistes.Execute(w, jsonList_Artists)
 
 }
 
@@ -222,27 +225,27 @@ func loadRelation(w http.ResponseWriter, r *http.Request) {
 	tRelation.Execute(w, jsonList_Relations)
 }
 
-/*func SearchArtist(w http.ResponseWriter, r *http.Request, Data []DatesAndArtists, originalData []DatesAndArtists) []DatesAndArtists {
-		if len(Data) != len(originalData){
-			Data = originalData
-		}
-		var new_data []DatesAndArtists
+func SearchArtist(w http.ResponseWriter, r *http.Request, jsonList_Artists []Artist, originalData []Artist ) []Artist {
+		var new_data []Artist
         lettre := r.FormValue("Check")
         fmt.Println(lettre)
 		if lettre == "" {
-			return Data
+			return jsonList_Artists
 		}
-		if strings.ToUpper(lettre) == "ALL"{
+		if len(originalData) != len(jsonList_Artists){
+			jsonList_Artists = originalData
+		}
+		if strings.ToUpper(lettre) == "ALL" {
 			return originalData
 		}
-		for i := 0; i < len(Data); i++ {
+		for i := 0; i < len(jsonList_Artists); i++ {
 			for j := 0; j < len(lettre); j++ {
-				if strings.ToUpper(string(Data[i].Artist.Name[j])) == strings.ToUpper(string(lettre[j])){
+				if strings.ToUpper(string(jsonList_Artists[i].Name[j])) == strings.ToUpper(string(lettre[j])){
 					if j == len(lettre)-1{
-						new_data = append(new_data, Data[i])
+						new_data = append(new_data, jsonList_Artists[i])
 					} else {
-						if j == len(Data[i].Artist.Name)-1{
-							new_data = append(new_data, Data[i])
+						if j == len(jsonList_Artists[i].Name)-1{
+							new_data = append(new_data, jsonList_Artists[i])
 							break
 						} else {
 							continue
@@ -253,28 +256,28 @@ func loadRelation(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		}
+		fmt.Println(new_data)
 		return new_data
 	}
 
 
-	func SortData(w http.ResponseWriter, r *http.Request, Data []DatesAndArtists) []DatesAndArtists {
+	func SortData(w http.ResponseWriter, r *http.Request, jsonList_Artists []Artist) []Artist {
 		order1 := r.FormValue("alpha")
 		order2 := r.FormValue("unalpha")
 		order3 := r.FormValue("firstalbum")
 		if order1 == "" && order2 == "" && order3 == ""{
-			return Data
+			return jsonList_Artists
 		}
 		if order1 != "" {
-			sort.Slice(Data, func(i, j int) bool {
-		 	return Data[i].Artist.Name < Data[j].Artist.Name })
+			sort.Slice(jsonList_Artists, func(i, j int) bool {
+		 	return jsonList_Artists[i].Name < jsonList_Artists[j].Name })
 		} else if order2 != "" {
-			sort.Slice(Data, func(i, j int) bool {
-		 	return Data[i].Artist.Name > Data[j].Artist.Name })
+			sort.Slice(jsonList_Artists, func(i, j int) bool {
+		 	return jsonList_Artists[i].Name > jsonList_Artists[j].Name })
 		} else if order3 != "" {
-			sort.Slice(Data, func(i, j int) bool {
-			return Data[i].Artist.FirstAlbum[6:] < Data[j].Artist.FirstAlbum[6:] })	
+			sort.Slice(jsonList_Artists, func(i, j int) bool {
+			return jsonList_Artists[i].FirstAlbum[6:] < jsonList_Artists[j].FirstAlbum[6:] })	
 		}
-		return Data
+		return jsonList_Artists
 		
 	}
-*/

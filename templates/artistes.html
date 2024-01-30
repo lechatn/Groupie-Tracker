@@ -14,11 +14,22 @@
       <a href="artistes">Artistes</a>
       <a href="location">Location</a> 
   </nav>
+  <form>
+    <label for="Check"></label>
+    <label for="Check"></label>
+    <input class="search" type="text" name="Check" placeholder="Search for an artist">
+    <input type="submit" value="Search">
+  </form>  
+  <form >
+    <label for="sort"></label>
+    <button type="submit" name="alpha" value="alpha">A-Z</button>
+    <button type="submit" name="unalpha"  value="unalpha">Z-A</button>
+  </form>
   </header>
   <main>
     <ul class="artistes">
       {{range .}}
-    <img src="{{.Artist.Images}}" alt="image">
+      <img src="{{.Images}}" alt="image">
       {{end}}
     </ul>
   </main>
