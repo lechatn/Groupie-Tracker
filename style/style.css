@@ -164,3 +164,38 @@ a:active span:after {
   transition: transform cubic-bezier(0.77, 0, 0.175, 1) 125ms;
   transition-delay: 0 !important;
 }
+
+ .artistes {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+  margin-top: 10rem;
+  gap: 10rem;
+}
+
+.artistes :hover {
+  border: solid 5px rgb(255, 199, 58);
+  border-radius: 50px;
+  scale: (1.1);
+  transition: 0.3s;
+}
+
+.pres {
+  display: flex;
+  align-content: center;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  color: black;
+  margin-top: 2rem;
+  text-decoration: underline;
+}
+
+.nav1 {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  background-color: purple;
+  border-radius: 50px;
+  width: 60%;
+  margin-left: 20%;
+}

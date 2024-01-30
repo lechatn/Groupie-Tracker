@@ -30,7 +30,6 @@ type DataLocation struct {
 	Dates     string   `json:"dates"`
 }
 
-
 type Dates struct {
 	Index   []string `json:"index"`
 	IdDates int      `json:"id"`
@@ -38,7 +37,7 @@ type Dates struct {
 }
 
 type Locations struct {
-	Id 	  int      `json:"id"`
+	Id        int      `json:"id"`
 	Locations []string `json:"locations"`
 }
 
@@ -48,8 +47,8 @@ type Relations struct {
 }
 
 type DatesAndArtists struct {
-	Artist Artist
-	Dates   Dates
+	Artist    Artist
+	Dates     Dates
 	Locations Locations
 	Relations Relations
 
