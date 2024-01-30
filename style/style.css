@@ -1,90 +1,166 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  }
+.back {
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
 
-
-  .menuham {
-    margin-top: -3.5rem;
-  }
-
-  .menu {
-    width: 0px;
-  }
-  
-  #hamburger {
-    display: none;
-  }
-  
-  #hamburger-logo {
-    cursor: pointer;
-    background: rgb(185, 185, 185);
-    width: 200px;
-    display: block;
-    color: white;
-    text-align: right;
-    transform: translateX(-168px);
-    padding: 10px;
-  }
-  
-  nav {
-    display: flex;
-    flex-direction: column;
-    background: rgb(205, 201, 201);
-    height: 60rem;
-    overflow: hidden;
-    width: 200px;
-    transform: translateX(-200px);
-    gap: 10%;
-    font-size: 1.2rem;
-  }
-  
-  #hamburger-logo,
-  nav {
-    transition: 0.7s;
-  }
-  
-
-  #hamburger:checked ~ #hamburger-logo,
-  #hamburger:checked ~ nav {
-    transform: translate(0);
-  }
-  
-  nav a {
-    color: white;
-    text-decoration: underline;
-    padding: 10px;
-  }
-  
-  nav a:hover {
-    background: #444;
-  }
-
-  .a {
-    margin-top: 10%;
-  }
-  
 .search {
 display: flex;
 justify-content: center;
 align-items: center;
 padding: 0.75rem;
 width: 30%;
-margin-left: 35rem;
+margin-left: 12rem;
+margin-top: 2rem;
 border-radius: 20px;
 border: none;
-background-color: rgba(223, 223, 223, 0.833);
+background-color: rgb(255, 255, 255); 
 }
 
-.input  {
+nav  a{ 
   display: flex;
+  justify-content: center;
+  gap: 20px;
   margin-top: 1rem;
-}
+  justify-content: center;
+  float: left; 
+  text-decoration: none;
+  color: #000000;
+  background:transparent;
+  height: 36px; 
+  line-height: 33px;
+  padding: 0 10px;
+  font-family: sans-serif; 
+  font-size: 13px; 
+  transition: .5s; 
+  width: 10rem; 
+  }
+
+  nav  a:hover{ 
+  background: #f43c80; 
+  }
+  
+  .color {
+    margin-left: 25rem;
+    display: grid;
+    margin-top: 2rem;
+  }
+
 
 .logo {
-  display: flex;
-  justify-content: right;
+  display: grid;
   align-items: right;
   width: 10rem;
   height: 10rem;
+  border-radius: 80px;
+  margin-left: 80rem;
+  margin-top: -6rem;
+}
+
+/*.artistes {
+  display: grid;
+  grid-area: auto;
+  border-radius: 40px;
+}
+
+.artistes:hover {
+  transform: scale(1.1);
+  transition: 1,2s; 
+  
+} */
+
+h1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  margin-top: 7rem;
+  color:beige;
+  font-family:'Courier New', Courier, monospace;
+}
+
+h3 {
+  display: flex;
+  justify-content: center;
+  color: beige;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+a {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  cursor: pointer;
+  font-family: 'Roboto Condensed', sans-serif;
+ 
+  font-weight: 900;
+  margin-top: 3rem;
+  user-select: none;
+  color: rgb(255, 0, 111);
+  font-size: 0;
+  transform: translate3d(0, 0, 0);
+  filter: blur(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+a span {
+  font-size: 40px;
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  position: relative;
+  transition: transform cubic-bezier(0.77, 0, 0.175, 1) 250ms;
+  padding: 0 0.1em;
+}
+a span:nth-child(0n) {
+  transition-delay: 0ms;
+}
+a span:nth-child(0n):after {
+  transition-delay: 0ms;
+}
+a span:nth-child(1n) {
+  transition-delay: 83.3333333333ms;
+}
+a span:nth-child(1n):after {
+  transition-delay: 83.3333333333ms;
+}
+a span:nth-child(2n) {
+  transition-delay: 166.6666666667ms;
+}
+a span:nth-child(2n):after {
+  transition-delay: 166.6666666667ms;
+}
+a span:nth-child(3n) {
+  transition-delay: 250ms;
+}
+a span:nth-child(3n):after {
+  transition-delay: 250ms;
+}
+a span:after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: -1%;
+  width: 102%;
+  height: 2em;
+  background: rgb(255, 0, 111);
+  transform-origin: top center;
+  transform: scaley(0.1);
+  transition: transform cubic-bezier(0.77, 0, 0.175, 1) 250ms;
+}
+a:hover span {
+  transform: translateY(-1em);
+}
+a:hover span:after {
+  transform: scaleY(1);
+}
+a:active span {
+  transform: translateY(0);
+  transition: transform cubic-bezier(0.77, 0, 0.175, 1) 125ms;
+  transition-delay: 0 !important;
+}
+a:active span:after {
+  transform: scaleY(0.5);
+  transition: transform cubic-bezier(0.77, 0, 0.175, 1) 125ms;
+  transition-delay: 0 !important;
 }
