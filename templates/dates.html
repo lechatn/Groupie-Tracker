@@ -1,7 +1,19 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-<meta charset="UTF-8">
+<head>  
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../style/style.css">
+    <title> Dates </title>
 </head>
 <body>
+    <ul>
+        {{range .Dat}}
+        <p>{{.IdDates}}</p>
+        {{range .Dates}} 
+            <p>{{.}}</p>
+            {{end}}
+            <br>
+        {{end}}
+    </ul>
 </body>
+</html>
