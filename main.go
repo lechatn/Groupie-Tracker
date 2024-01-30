@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"sort"
 	"strings"
 	"text/template"
+	//"sort"
 )
 
 // Define all the struct and some variables
@@ -198,14 +200,15 @@ func main() {
 	}
 	
 	jsonList_Relations = allRelations["index"]
-	fmt.Println(jsonList_Relations)
+	//fmt.Println(jsonList_Relations)
 	////////////////////////////////////////////////////////////////////////////////////
 
 	Data := createData(jsonList_Artists,jsonList_Dates,jsonList_Location,jsonList_Relations)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		tHome := template.Must(template.ParseFiles("./templates/home.html"))
-		new_data := SearchBar(w,r,Data)
+		new_data := SearchArtist(w,r,Data)
+		new_data = SortData(w,r,new_data)
 		tHome.Execute(w, new_data)
 		new_data = Data
 	})
@@ -224,6 +227,8 @@ func main() {
 		tLocation := template.Must(template.ParseFiles("./templates/location.html")) // Read the location page
 		tLocation.Execute(w, jsonList_Relations)
 	})
+
+	
 
 	fmt.Println("http://localhost:8768") // Creat clickable link in the terminal
 	http.ListenAndServe(port, nil)
@@ -256,7 +261,7 @@ func createData(jsonList_Artists []Artist, jsonList_Dates []Dates, jsonList_Loca
 	return Data
 }
 
-func SearchBar(w http.ResponseWriter, r *http.Request, Data []DatesAndArtists) []DatesAndArtists {
+func SearchArtist(w http.ResponseWriter, r *http.Request, Data []DatesAndArtists) []DatesAndArtists {
 		var new_data []DatesAndArtists
         lettre := r.FormValue("Check")
         fmt.Println(lettre)
@@ -266,10 +271,15 @@ func SearchBar(w http.ResponseWriter, r *http.Request, Data []DatesAndArtists) [
 		for i := 0; i < len(Data); i++ {
 			for j := 0; j < len(lettre); j++ {
 				if strings.ToUpper(string(Data[i].Artist.Name[j])) == strings.ToUpper(string(lettre[j])){
-					if j == len(lettre)-1 {
+					if j == len(lettre)-1{
 						new_data = append(new_data, Data[i])
 					} else {
-						continue
+						if j == len(Data[i].Artist.Name)-1{
+							new_data = append(new_data, Data[i])
+							break
+						} else {
+							continue
+						}	
 					}
 				} else {
 					break
@@ -277,4 +287,24 @@ func SearchBar(w http.ResponseWriter, r *http.Request, Data []DatesAndArtists) [
 			}
 		}
 		return new_data
+	}
+
+
+	func SortData(w http.ResponseWriter, r *http.Request, Data []DatesAndArtists) []DatesAndArtists {
+		order1 := r.FormValue("alpha")
+		order2 := r.FormValue("unalpha")
+		fmt.Println("order1 : ",order1)
+		fmt.Println("order2 : ",order2)
+		if order1 == "" && order2 == "" {
+			return Data
+		}
+		if order1 != "" {
+			sort.Slice(Data, func(i, j int) bool {
+		 	return Data[i].Artist.Name < Data[j].Artist.Name })
+		} else {
+			sort.Slice(Data, func(i, j int) bool {
+		 	return Data[i].Artist.Name > Data[j].Artist.Name })
+		}
+		return Data
+		
 	}

@@ -9,7 +9,7 @@
   <header>
   <section class="input">
     <form>
-       <label for="Check"></label>
+      <label for="Check"></label>
       <input class="search" type="text" name="Check" placeholder="Search for an artist">
       <input type="submit" value="Search">
     </form>  
@@ -28,6 +28,12 @@
     </nav>
   </section>
   </section>
+  <form >
+    <label for="sort"></label>
+    <button type="submit" name="alpha" value="alpha">A-Z</button>
+    <button type="submit" name="unalpha"  value="unalpha">Z-A</button>
+  </form>
+    
   <footer>
     <section class="artistes">
       {{range .}}
@@ -56,6 +62,7 @@
         {{end}}
         <br>
       {{end}}
+      <div id="map"></div>
   </section>
   </footer>
 </body>
