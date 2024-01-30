@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"sort"
-	"strings"
+	//"net/url"
+	//"sort"
+	//"strings"
 	"text/template"
 	//"sort"
 )
@@ -21,6 +22,7 @@ type Artist struct {
 	CreationDate int      `json:"creationDate"`
 	FirstAlbum   string   `json:"firstAlbum"`
 }
+
 
 type DataLocation struct {
 	Locations []string `json:"locations"`
@@ -77,40 +79,40 @@ func main() {
 	img := http.FileServer(http.Dir("images"))               // For add css to the html pages
 	http.Handle("/images/", http.StripPrefix("/images/", img))
 
-	url_General := "https://groupietrackers.herokuapp.com/api"
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		tHome := template.Must(template.ParseFiles("./templates/home.html"))
+		tHome.Execute(w, nil)
+	})
 
-	////////////////////////////////////////////////////////////////////////////
+	http.HandleFunc("/artistes", func(w http.ResponseWriter, r *http.Request) {
+		loadArtistes(w, r)
+	})
 
-	response_General, err := http.Get(url_General)
-	if err != nil {
-		fmt.Println("Error1")
-		return
-	}
-	defer response_General.Body.Close()
+	http.HandleFunc("/dates", func(w http.ResponseWriter, r *http.Request) {
+		loadDates(w, r)
+	})
 
-	body_General, err := io.ReadAll(response_General.Body)
-	if err != nil {
-		fmt.Println("Error2")
-		return
-	}
+	http.HandleFunc("/location", func(w http.ResponseWriter, r *http.Request) {
+		loadLocation(w, r)
+	})
 
-	errUnmarshall := json.Unmarshal(body_General, &homeData)
-	if errUnmarshall != nil {
-		fmt.Println("Error3")
-		return
-	}
+	http.HandleFunc("/relation", func(w http.ResponseWriter, r *http.Request) {
+		loadRelation(w, r)
+	})
 
-	////////////////////////////////////////////////////////////////////////
+	fmt.Println("http://localhost:8768") // Creat clickable link in the terminal
+	http.ListenAndServe(port, nil)
 
-	url_Artists := homeData["artists"].(string)
-	url_Locations := homeData["locations"].(string)
-	url_Dates := homeData["dates"].(string)
-	url_Relations := homeData["relation"].(string)
+}
 
-	/// ////////////////////////////////////////////////////////////////////Partie artsites
+
+func loadArtistes(w http.ResponseWriter, r *http.Request) {
+	url_Artists := "https://groupietrackers.herokuapp.com/api/artists"
+
+	var jsonList_Artists []Artist
 	response_Artists, err := http.Get(url_Artists)
 	if err != nil {
-		fmt.Println("Error4")
+		fmt.Println("Error1")
 		return
 	}
 
@@ -121,12 +123,21 @@ func main() {
 		fmt.Println("Error5")
 		return
 	}
-	errUnmarshall2 := json.Unmarshal(body_Artists, &jsonList_Artists)
-	if errUnmarshall2 != nil {
+	errUnmarshall1 := json.Unmarshal(body_Artists, &jsonList_Artists)
+	if errUnmarshall1 != nil {
 		fmt.Println("Error6")
 		return
 	}
-	//////////////////////////////////////////////////////////////////////////////////// 
+
+	//fmt.Println(jsonList_Artists)
+
+	tArtistes := template.Must(template.ParseFiles("./templates/artistes.html")) // Read the artists page
+	tArtistes.Execute(w, jsonList_Artists)
+
+}
+
+func loadDates(w http.ResponseWriter, r *http.Request) {
+	url_Dates := "https://groupietrackers.herokuapp.com/api/dates"
 	response_Dates, err := http.Get(url_Dates)
 	if err != nil {
 		fmt.Println("Error7")
@@ -141,18 +152,21 @@ func main() {
 		return
 	}
 
-	errUnmarshall3 := json.Unmarshal(body_Dates, &homeDates)
-	if errUnmarshall3 != nil {
+	errUnmarshall2 := json.Unmarshal(body_Dates, &homeDates)
+	if errUnmarshall2 != nil {
 		fmt.Println("Error9")
 		return
 	}
 	jsonList_Dates = homeDates["index"]
-	//fmt.Println(jsonList_Dates)
 
-	////////////////////////////////////////////////////////////////////////////////////
+	tDates := template.Must(template.ParseFiles("./templates/dates.html")) // Read the dates page
+	tDates.Execute(w, jsonList_Dates)
 
+}
 
-	////////////////////////////////////////////////////////////////////////////////////
+func loadLocation(w http.ResponseWriter, r *http.Request) {
+	url_Locations := "https://groupietrackers.herokuapp.com/api/locations"
+
 	response_Location, err := http.Get(url_Locations)
 	if err != nil {
 		fmt.Println("Error7")
@@ -173,12 +187,15 @@ func main() {
 		return
 	}
 	jsonList_Location = allLocation["index"]
-	//fmt.Println(jsonList_Dates)
+	//fmt.Println(jsonList_Location)
 
-	////////////////////////////////////////////////////////////////////////////////////
+	tLocation := template.Must(template.ParseFiles("./templates/location.html")) // Read the location page	
+	tLocation.Execute(w, jsonList_Location)
+}
 
+func loadRelation(w http.ResponseWriter, r *http.Request) {
+	url_Relations := "https://groupietrackers.herokuapp.com/api/relation"
 
-	/// ////////////////////////////////////////////////////////////////////Partie artsites
 	response_Relations, err := http.Get(url_Relations)
 	if err != nil {
 		fmt.Println("Error4")
@@ -200,73 +217,24 @@ func main() {
 	}
 	
 	jsonList_Relations = allRelations["index"]
-	//fmt.Println(jsonList_Relations)
-	////////////////////////////////////////////////////////////////////////////////////
+	fmt.Println(jsonList_Relations)
 
-	Data := createData(jsonList_Artists,jsonList_Dates,jsonList_Location,jsonList_Relations)
-
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		tHome := template.Must(template.ParseFiles("./templates/home.html"))
-		new_data := SearchArtist(w,r,Data)
-		new_data = SortData(w,r,new_data)
-		tHome.Execute(w, new_data)
-		new_data = Data
-	})
-
-	http.HandleFunc("/artistes", func(w http.ResponseWriter, r *http.Request) {
-		tArtistes := template.Must(template.ParseFiles("./templates/artistes.html")) // Read the artists page
-		tArtistes.Execute(w, nil)
-	})
-
-	http.HandleFunc("/dates", func(w http.ResponseWriter, r *http.Request) {
-		tDates := template.Must(template.ParseFiles("./templates/dates.html")) // Read the dates page
-		tDates.Execute(w, nil)
-	})
-
-	http.HandleFunc("/location", func(w http.ResponseWriter, r *http.Request) {
-		tLocation := template.Must(template.ParseFiles("./templates/location.html")) // Read the location page
-		tLocation.Execute(w, jsonList_Relations)
-	})
-
-	
-
-	fmt.Println("http://localhost:8768") // Creat clickable link in the terminal
-	http.ListenAndServe(port, nil)
-
+	tRelation := template.Must(template.ParseFiles("./templates/relation.html")) // Read the relation page
+	tRelation.Execute(w, jsonList_Relations)
 }
 
-
-func createData(jsonList_Artists []Artist, jsonList_Dates []Dates, jsonList_Location []Locations, jsonRelations []Relations) []DatesAndArtists{
-	var Data []DatesAndArtists
-
-	for i:=0; i<len(jsonList_Artists); i++{
-		for j:=0; j<len(jsonList_Dates); j++{
-			if jsonList_Artists[i].IdArtists == jsonList_Dates[j].IdDates{
-				if jsonList_Location[j].Id == jsonList_Dates[j].IdDates{
-					if jsonList_Artists[i].IdArtists == jsonRelations[i].Id{
-						var inter DatesAndArtists
-						inter.Artist = jsonList_Artists[i]
-						inter.Dates = jsonList_Dates[j]
-						inter.Locations = jsonList_Location[j]
-						inter.Relations = jsonList_Relations[i]
-						Data = append(Data, inter)
-					//fmt.Println(inter)
-					}
-					
-				}	
-			}
-			continue
+/*func SearchArtist(w http.ResponseWriter, r *http.Request, Data []DatesAndArtists, originalData []DatesAndArtists) []DatesAndArtists {
+		if len(Data) != len(originalData){
+			Data = originalData
 		}
-	}
-	return Data
-}
-
-func SearchArtist(w http.ResponseWriter, r *http.Request, Data []DatesAndArtists) []DatesAndArtists {
 		var new_data []DatesAndArtists
         lettre := r.FormValue("Check")
         fmt.Println(lettre)
 		if lettre == "" {
 			return Data
+		}
+		if strings.ToUpper(lettre) == "ALL"{
+			return originalData
 		}
 		for i := 0; i < len(Data); i++ {
 			for j := 0; j < len(lettre); j++ {
@@ -293,18 +261,21 @@ func SearchArtist(w http.ResponseWriter, r *http.Request, Data []DatesAndArtists
 	func SortData(w http.ResponseWriter, r *http.Request, Data []DatesAndArtists) []DatesAndArtists {
 		order1 := r.FormValue("alpha")
 		order2 := r.FormValue("unalpha")
-		fmt.Println("order1 : ",order1)
-		fmt.Println("order2 : ",order2)
-		if order1 == "" && order2 == "" {
+		order3 := r.FormValue("firstalbum")
+		if order1 == "" && order2 == "" && order3 == ""{
 			return Data
 		}
 		if order1 != "" {
 			sort.Slice(Data, func(i, j int) bool {
 		 	return Data[i].Artist.Name < Data[j].Artist.Name })
-		} else {
+		} else if order2 != "" {
 			sort.Slice(Data, func(i, j int) bool {
 		 	return Data[i].Artist.Name > Data[j].Artist.Name })
+		} else if order3 != "" {
+			sort.Slice(Data, func(i, j int) bool {
+			return Data[i].Artist.FirstAlbum[6:] < Data[j].Artist.FirstAlbum[6:] })	
 		}
 		return Data
 		
 	}
+*/
