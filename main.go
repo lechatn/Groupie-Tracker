@@ -189,7 +189,7 @@ func main() {
 		fmt.Println("Error6")
 		return
 	}
-	fmt.Println(allRelations)
+	// fmt.Println(allRelations)
 	jsonList_Relations = allRelations["index"]
 
 	////////////////////////////////////////////////////////////////////////////////////
@@ -198,12 +198,12 @@ func main() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		tHome := template.Must(template.ParseFiles("./templates/home.html"))
-		tHome.Execute(w, Data)
+		tHome.Execute(w, nil)
 	})
 
 	http.HandleFunc("/artistes", func(w http.ResponseWriter, r *http.Request) {
 		tArtistes := template.Must(template.ParseFiles("./templates/artistes.html")) // Read the artists page
-		tArtistes.Execute(w, nil)
+		tArtistes.Execute(w, Data)
 	})
 
 	http.HandleFunc("/dates", func(w http.ResponseWriter, r *http.Request) {
