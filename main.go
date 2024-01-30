@@ -169,7 +169,12 @@ func main() {
 		return
 	}
 	jsonList_Location = allLocation["index"]
-	//fmt.Println(jsonList_Dates)
+	// // var jsonList_Location_Slice []string
+	for i := 0; i < len(jsonList_Location); i++ {
+		for j := 0; j < len(jsonList_Location[i]); j++ {
+			fmt.Println(jsonList_Location[j])
+		}
+	}
 
 	////////////////////////////////////////////////////////////////////////////////////
 
@@ -219,6 +224,7 @@ func main() {
 
 	http.HandleFunc("/artistes", func(w http.ResponseWriter, r *http.Request) {
 		tArtistes := template.Must(template.ParseFiles("./templates/artistes.html")) // Read the artists page
+
 		tArtistes.Execute(w, Data)
 	})
 
