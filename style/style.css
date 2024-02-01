@@ -4,6 +4,12 @@
   background-size: 100% 100%;
 }
 
+.artist_back {
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
 .search {
 display: flex;
 justify-content: center;
@@ -30,7 +36,7 @@ nav  a{
   height: 36px; 
   line-height: 33px;
   padding: 0 10px;
-  font-family: sans-serif; 
+  font-family:Verdana, Geneva, Tahoma, sans-serif; 
   font-size: 13px; 
   transition: .5s; 
   width: 10rem; 
@@ -56,18 +62,6 @@ nav  a{
   margin-left: 80rem;
   margin-top: -6rem;
 }
-
-/*.artistes {
-  display: grid;
-  grid-area: auto;
-  border-radius: 40px;
-}
-
-.artistes:hover {
-  transform: scale(1.1);
-  transition: 1,2s; 
-  
-} */
 
 h1 {
   display: flex;
@@ -168,23 +162,31 @@ a:active span:after {
  .artistes {
   display: grid;
   grid-template-rows: 1fr 1fr;
-  grid-template-columns: 1fr 1fr 1fr;
-  margin-top: 10rem;
-  gap: 10rem;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 4rem;
+  
 }
 
-.artistes :hover {
+/* .artistes :hover {
   border: solid 5px rgb(255, 199, 58);
   border-radius: 50px;
-  scale: (1.1);
   transition: 0.3s;
+} */
+
+
+.artistes-name img {
+  display: flex;
+  margin-top: 25%;
+  margin-left: 8%;
+  border: solid 4px rgb(194, 4, 194);
+  border-radius: 50px;
 }
 
 .pres {
   display: flex;
   align-content: center;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-  color: black;
+  color: rgb(194, 4, 194);
   margin-top: 2rem;
   text-decoration: underline;
 }
@@ -194,8 +196,20 @@ a:active span:after {
   align-content: center;
   justify-content: center;
   align-items: center;
-  background-color: purple;
-  border-radius: 50px;
-  width: 60%;
-  margin-left: 20%;
+  background-color: rgb(190, 2, 190);
+  border-radius: 70px;
+  width: 50%;
+  margin-left: 25%; 
+  height: 4%;
+}
+
+.artistes-name {
+  text-align: center;
+  margin-right: 3rem;
+  color: black;
+}
+
+h4 {
+  color: white;
+  border: none;
 }
