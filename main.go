@@ -9,9 +9,9 @@ import (
 
 	//"net/url"
 	//"sort"
+	"sort"
 	"strings"
 	"text/template"
-	"sort"
 )
 
 // Define all the struct and some variables
@@ -24,7 +24,6 @@ type Artist struct {
 	CreationDate int      `json:"creationDate"`
 	FirstAlbum   string   `json:"firstAlbum"`
 }
-
 
 type DataLocation struct {
 	Locations []string `json:"locations"`
@@ -44,8 +43,8 @@ type Locations struct {
 }
 
 type Relations struct {
-	Id 	  int      					 `json:"id"`
-	DateLocation map[string][]string `json:"datesLocations"`	
+	Id           int                 `json:"id"`
+	DateLocation map[string][]string `json:"datesLocations"`
 }
 
 var homeData map[string]interface{}
@@ -69,7 +68,6 @@ var originalData []Artist
 // ///////////////////////////////////////////
 
 func main() {
-	fmt.Println()
 	css := http.FileServer(http.Dir("style"))                // For add css to the html pages
 	http.Handle("/style/", http.StripPrefix("/style/", css)) // For add css to the html pages
 	img := http.FileServer(http.Dir("images"))               // For add css to the html pages
@@ -78,6 +76,7 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		tHome := template.Must(template.ParseFiles("./templates/home.html"))
 		tHome.Execute(w, nil)
+		
 	})
 
 	http.HandleFunc("/artistes", func(w http.ResponseWriter, r *http.Request) {
@@ -86,9 +85,18 @@ func main() {
 			artist_create = true
 			originalData = jsonList_Artists
 		}
-		
 		tArtistes := template.Must(template.ParseFiles("./templates/artistes.html")) // Read the artists page
-		jsonList_Artists = SearchArtist(w, r, jsonList_Artists, originalData)
+		if r.FormValue("Search_artist") != "" {
+			fmt.Println("test")
+			lettre := r.FormValue("Search_artist")
+			jsonList_Artists = SearchArtist(w, r, jsonList_Artists, originalData, lettre)
+			lettre = ""
+		}
+		if r.FormValue("Check") != "" {
+			lettre := r.FormValue("Check")
+			jsonList_Artists = SearchArtist(w, r, jsonList_Artists, originalData, lettre)
+			lettre = ""
+		}
 		jsonList_Artists = SortData(w, r, jsonList_Artists)
 		tArtistes.Execute(w, jsonList_Artists)
 	})
@@ -109,7 +117,6 @@ func main() {
 	http.ListenAndServe(port, nil)
 
 }
-
 
 func loadArtistes(w http.ResponseWriter, r *http.Request) []Artist {
 	url_Artists := "https://groupietrackers.herokuapp.com/api/artists"
@@ -191,7 +198,7 @@ func loadLocation(w http.ResponseWriter, r *http.Request) {
 	jsonList_Location = allLocation["index"]
 	//fmt.Println(jsonList_Location)
 
-	tLocation := template.Must(template.ParseFiles("./templates/location.html")) // Read the location page	
+	tLocation := template.Must(template.ParseFiles("./templates/location.html")) // Read the location page
 	tLocation.Execute(w, jsonList_Location)
 }
 
@@ -217,67 +224,79 @@ func loadRelation(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Error6")
 		return
 	}
-	
+
 	jsonList_Relations = allRelations["index"]
-	fmt.Println(jsonList_Relations)
+	//fmt.Println(jsonList_Relations)
 
 	tRelation := template.Must(template.ParseFiles("./templates/relation.html")) // Read the relation page
 	tRelation.Execute(w, jsonList_Relations)
 }
 
-func SearchArtist(w http.ResponseWriter, r *http.Request, jsonList_Artists []Artist, originalData []Artist ) []Artist {
-		var new_data []Artist
-        lettre := r.FormValue("Check")
-        fmt.Println(lettre)
-		if lettre == "" {
-			return jsonList_Artists
-		}
-		if len(originalData) != len(jsonList_Artists){
-			jsonList_Artists = originalData
-		}
-		if strings.ToUpper(lettre) == "ALL" {
-			return originalData
-		}
-		for i := 0; i < len(jsonList_Artists); i++ {
-			for j := 0; j < len(lettre); j++ {
-				if strings.ToUpper(string(jsonList_Artists[i].Name[j])) == strings.ToUpper(string(lettre[j])){
-					if j == len(lettre)-1{
-						new_data = append(new_data, jsonList_Artists[i])
-					} else {
-						if j == len(jsonList_Artists[i].Name)-1{
-							new_data = append(new_data, jsonList_Artists[i])
-							break
-						} else {
-							continue
-						}	
-					}
+func SearchArtist(w http.ResponseWriter, r *http.Request, jsonList_Artists []Artist, originalData []Artist, lettre string) []Artist {
+	var new_data []Artist
+	//fmt.Println(lettre)
+	if lettre == "" {
+		return jsonList_Artists
+	}
+	if len(originalData) != len(jsonList_Artists) {
+		fmt.Println("maj")
+		jsonList_Artists = originalData
+	}
+	if strings.ToUpper(lettre) == "ALL" {
+		return originalData
+	}
+	for i := 0; i < len(jsonList_Artists); i++ {
+		for j := 0; j < len(lettre); j++ {
+			if strings.ToUpper(string(jsonList_Artists[i].Name[j])) == strings.ToUpper(string(lettre[j])) {
+				if j == len(lettre)-1 {
+					new_data = append(new_data, jsonList_Artists[i])
 				} else {
-					break
+					if j == len(jsonList_Artists[i].Name)-1 {
+						new_data = append(new_data, jsonList_Artists[i])
+						break
+					} else {
+						continue
+					}
 				}
+			} else {
+				break
 			}
 		}
-		fmt.Println(new_data)
-		return new_data
 	}
+	return new_data
+}
 
-
-	func SortData(w http.ResponseWriter, r *http.Request, jsonList_Artists []Artist) []Artist {
-		order1 := r.FormValue("alpha")
-		order2 := r.FormValue("unalpha")
-		order3 := r.FormValue("firstalbum")
-		if order1 == "" && order2 == "" && order3 == ""{
-			return jsonList_Artists
-		}
-		if order1 != "" {
-			sort.Slice(jsonList_Artists, func(i, j int) bool {
-		 	return jsonList_Artists[i].Name < jsonList_Artists[j].Name })
-		} else if order2 != "" {
-			sort.Slice(jsonList_Artists, func(i, j int) bool {
-		 	return jsonList_Artists[i].Name > jsonList_Artists[j].Name })
-		} else if order3 != "" {
-			sort.Slice(jsonList_Artists, func(i, j int) bool {
-			return jsonList_Artists[i].FirstAlbum[6:] < jsonList_Artists[j].FirstAlbum[6:] })	
-		}
+func SortData(w http.ResponseWriter, r *http.Request, jsonList_Artists []Artist) []Artist {
+	order1 := r.FormValue("alpha")
+	order2 := r.FormValue("unalpha")
+	order3 := r.FormValue("firstalbum")
+	order4 := r.FormValue("CreationDate")
+	if order1 == "" && order2 == "" && order3 == "" && order4 == "" {
 		return jsonList_Artists
-		
 	}
+	if order1 != "" {
+		sort.Slice(jsonList_Artists, func(i, j int) bool {
+			return jsonList_Artists[i].Name < jsonList_Artists[j].Name
+		})
+	} else if order2 != "" {
+		sort.Slice(jsonList_Artists, func(i, j int) bool {
+			return jsonList_Artists[i].Name > jsonList_Artists[j].Name
+		})
+	} else if order3 != "" {
+		sort.Slice(jsonList_Artists, func(i, j int) bool {
+			if jsonList_Artists[i].FirstAlbum[6:] == jsonList_Artists[j].FirstAlbum[6:] {
+				if jsonList_Artists[i].FirstAlbum[3:5] == jsonList_Artists[j].FirstAlbum[3:5] {
+					return jsonList_Artists[i].FirstAlbum[:2] < jsonList_Artists[j].FirstAlbum[:2]
+				}
+				return jsonList_Artists[i].FirstAlbum[3:5] < jsonList_Artists[j].FirstAlbum[3:5]
+			}
+			return jsonList_Artists[i].FirstAlbum[6:] < jsonList_Artists[j].FirstAlbum[6:]
+		})
+	} else if order4 != "" {
+		sort.Slice(jsonList_Artists, func(i, j int) bool {
+			return jsonList_Artists[i].CreationDate < jsonList_Artists[j].CreationDate
+		})
+	}
+	return jsonList_Artists
+}
+

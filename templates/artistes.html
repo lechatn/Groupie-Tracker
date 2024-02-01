@@ -16,20 +16,20 @@
   </nav>
   <form>
     <label for="Check"></label>
-    <label for="Check"></label>
     <input class="search" type="text" name="Check" placeholder="Search for an artist">
-    <input type="submit" value="Search">
   </form>  
   <form >
     <label for="sort"></label>
     <button type="submit" name="alpha" value="alpha">A-Z</button>
     <button type="submit" name="unalpha"  value="unalpha">Z-A</button>
+    <button type="submit" name="firstalbum" value="firstalbum">First Album</button>
+    <button type="submit" name="CreationDate" value="CreationDate">Creation Date</button>
   </form>
   </header>
   <main>
     <ul class="artistes">
       {{range .}}
-      <img src="{{.Images}}" alt="image">
+      <a href="/location"><img src="{{.Images}}" alt="image"></a>
       {{end}}
     </ul>
   </main>
