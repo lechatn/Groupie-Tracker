@@ -5,12 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-
-	//"net/url"
-	//"sort"
-	//"strings"
 	"text/template"
-	//"sort"
 )
 
 // Define all the struct and some variables
@@ -116,7 +111,7 @@ func main() {
 		}
 		json.NewEncoder(w).Encode(testeu)
 	})
-	
+
 	fmt.Println("http://localhost:8768") // Creat clickable link in the terminal
 	http.ListenAndServe(port, nil)
 

@@ -1,4 +1,10 @@
-    .back {
+.artist_back {
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.back {
     background-attachment: fixed;
     background-repeat: no-repeat;
     background-size: 100% 100%;
@@ -200,72 +206,78 @@ a:active span:after {
 .artistes {
     display: grid;
     grid-template-rows: 1fr 1fr;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     margin-top: 10rem;
-    gap: 10rem;
-    .artistes {
-        display: grid;
-        grid-template-rows: 1fr 1fr;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-        gap: 4rem;
-    }
-    .artistes :hover {
+    gap: 4rem;
+}
+
+
+/* .artistes :hover {
         border: solid 5px rgb(255, 199, 58);
         border-radius: 50px;
         scale: (1.1);
-        transition: 0.3s;
-        /* .artistes :hover {
+        transition: 0.3s; */
+
+
+/* .artistes :hover {
   border: solid 5px rgb(255, 199, 58);
   border-radius: 50px;
   transition: 0.3s;
 } */
-        img#img.artiste {
-            display: flex;
-            margin-top: 25%;
-            margin-left: 8%;
-            border: solid 4px rgb(194, 4, 194);
-            border-radius: 50px;
-        }
-        .pres {
-            display: flex;
-            align-content: center;
-            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-            color: black;
-            margin-top: 2rem;
-            text-decoration: underline;
-            display: flex;
-            align-content: center;
-            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-            color: rgb(194, 4, 194);
-            margin-top: 2rem;
-            text-decoration: underline;
-        }
-        .nav1 {
-            display: flex;
-            align-content: center;
-            justify-content: center;
-            align-items: center;
-            background-color: purple;
-            border-radius: 50px;
-            width: 60%;
-            margin-left: 20%;
-        }
-        display: flex;
-        align-content: center;
-        justify-content: center;
-        align-items: center;
-        background-color: rgb(190, 2, 190);
-        border-radius: 70px;
-        width: 50%;
-        margin-left: 25%;
-        height: 4%;
-    }
-    .artistes-name {
-        text-align: center;
-        margin-right: 3rem;
-        color: black;
-    }
-    h4 {
-        color: white;
-        border: none;
-    }
+
+.artistes-name img {
+    display: flex;
+    margin-top: 25%;
+    margin-left: 8%;
+    border: solid 4px rgb(194, 4, 194);
+    border-radius: 50px;
+}
+
+.pres {
+    display: flex;
+    align-content: center;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: black;
+    margin-top: 2rem;
+    text-decoration: underline;
+    display: flex;
+    align-content: center;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: rgb(194, 4, 194);
+    margin-top: 2rem;
+    text-decoration: underline;
+}
+
+.nav1 {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    background-color: purple;
+    border-radius: 50px;
+    width: 60%;
+    margin-left: 20%;
+}
+
+.nav1 {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(190, 2, 190);
+    border-radius: 70px;
+    width: 50%;
+    margin-left: 25%;
+    height: 4%;
+}
+
+.artistes-name {
+    text-align: center;
+    margin-right: 3rem;
+    color: black;
+}
+
+h4 {
+    color: white;
+    border: none;
+}
