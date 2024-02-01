@@ -5,9 +5,13 @@
     <meta charset="UTF-8">
     <title> Artistes </title>
     <link rel="stylesheet" href="../style/style.css">
+    <meta charset="UTF-8">
+    <title> Artistes </title>
+    <link rel="stylesheet" href="../style/style.css">
+    <script src="../js/zoom.js"></script>
 </head>
 
-<body class="artist_back" background="../images/OLIESY0.jpg">
+<body background="../images/back_artists.jpg" class="artist_back">
     <header>
         <h1 class="pres"> Présentation des artistes </h1>
         <nav class="nav1">
@@ -18,10 +22,21 @@
         </nav>
     </header>
     <main>
+        <form>
+            <label for="Check"></label>
+            <input class="search" type="text" name="Check" placeholder="Search for an artist or type 'all' for all the artists">
+        </form>
+        <form>
+            <label for="sort"></label>
+            <button type="submit" name="alpha" value="alpha">A-Z</button>
+            <button type="submit" name="unalpha" value="unalpha">Z-A</button>
+            <button type="submit" name="firstalbum" value="firstalbum">First Album</button>
+            <button type="submit" name="CreationDate" value="CreationDate">Creation Date</button>
+        </form>
         <ul class="artistes">
             {{range .}}
             <article class="artistes-name">
-                <a href="/location"><img class="artiste" src="{{.Images}} " alt="artistes" id="img "></a>
+                <a href="/location/{{.IdArtists}}"><img class="artiste" src="{{.Images}}" alt="artistes" id="img"></a>
                 <h4>{{.Name}}</h4>
             </article>
             {{end}}

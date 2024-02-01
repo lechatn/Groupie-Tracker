@@ -16,9 +16,9 @@
 </head>
 
 <body>
-    <div id="mapid"></div>
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="../js/script.js "></script>
+    {{range .}}
+    <p>{{.Locations}}</p>
+    {{end}}
 </body>
 
 </html>
