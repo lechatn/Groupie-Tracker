@@ -69,6 +69,8 @@ func main() {
 	http.Handle("/style/", http.StripPrefix("/style/", css)) // For add css to the html pages
 	img := http.FileServer(http.Dir("images"))               // For add css to the html pages
 	http.Handle("/images/", http.StripPrefix("/images/", img))
+	js := http.FileServer(http.Dir("js")) // For add css to the html pages
+	http.Handle("/js/", http.StripPrefix("/js/", js))
 
 	url_General := "https://groupietrackers.herokuapp.com/api"
 
