@@ -4,8 +4,9 @@
 <meta charset="UTF-8">
 <title> Artistes </title>
 <link rel="stylesheet" href="../style/style.css">
+<script src="../js/zoom.js"></script>
 </head>
-<body>
+<body background="../images/bacck.png">
   <header>
     <h1 class="pres"> Présentation des artistes </h1>
     <nav class="nav1">
@@ -18,8 +19,11 @@
   <main>
     <ul class="artistes">
       {{range .}}
-    <img src="{{.Artist.Images}}" alt="image">
+      <article class="artistes-name">
+    <img class ="artiste" src="{{.Artist.Images}}" alt="artistes" id="img" onclick="zoomImg(this)">
+    <h4>{{.Artist.Name}}</h4>
+      </article>
       {{end}}
     </ul>
-  </main>
+  </main> 
 </body>
