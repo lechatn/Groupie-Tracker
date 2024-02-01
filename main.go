@@ -132,6 +132,8 @@ func main() {
 		json.NewEncoder(w).Encode(testeu)
 	})
 
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+
 	fmt.Println("http://localhost:8768") // Creat clickable link in the terminal
 	http.ListenAndServe(port, nil)
 

@@ -5,20 +5,27 @@
     <meta charset="UTF-8">
     <title> Accueil </title>
     <link rel="stylesheet" href="../style/style.css">
+    <meta charset="UTF-8">
+    <title> Accueil </title>
+    <link rel="stylesheet" href="../static/style/style.css">
 </head>
 
-<body class="back" background="../images/back.jpg">
+<body class="back" background="../static/images/back.jpg">
     <header class="global_header">
         <section class="color">
             <nav class="nav">
-                <a href="home">Page d'accueil</a>
+                <a href="">Page d'accueil</a>
                 <a href="dates">Dates</a>
                 <a href="artistes">Artistes</a>
                 <a href="location">Location</a>
+                <a href="relation">Relation</a>
             </nav>
-            <input class="search" type="text" placeholder="Search for an artist">
+            <form action="artistes">
+                <label for="Search_artist"></label>
+                <input class="search" type="text" name="Search_artist" placeholder="Search for an artist">
+            </form>
         </section>
-        <img class="logo" src="../images/logo.png" alt="logo">
+        <img class="logo" src="../static/images/logo.png" alt="logo">
     </header>
     <main>
         <a>
