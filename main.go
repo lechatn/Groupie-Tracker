@@ -116,7 +116,7 @@ func main() {
 		}
 		json.NewEncoder(w).Encode(testeu)
 	})
-
+	
 	fmt.Println("http://localhost:8768") // Creat clickable link in the terminal
 	http.ListenAndServe(port, nil)
 
