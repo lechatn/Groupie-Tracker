@@ -29,7 +29,8 @@
   <main>
     <ul class="artistes">
       {{range .}}
-      <a href="/location"><img src="{{.Images}}" alt="image"></a>
+      <a href="/location{{.IdArtists}}"><img src="{{.Images}}" alt="image" id="{{.IdArtists}}"></a>
+      <p>{{.IdArtists}}</p>
       {{end}}
     </ul>
   </main>
