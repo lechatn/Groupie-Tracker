@@ -8,7 +8,7 @@
     <script src="../js/zoom.js"></script>
 </head>
 
-<body background="../images/back_artists.jpg" class="artist_back">
+<body background="../static/images/back_artists.jpg" class="artist_back">
     <header>
         <h1 class="pres"> Présentation des artistes </h1>
         <nav class="nav1">
@@ -33,44 +33,12 @@
         <ul class="artistes">
             {{range .}}
             <article class="artistes-name">
-                <a href="/location/{{.IdArtists}}"><img class="artiste" src="{{.Images}}" alt="artistes" id="img"></a>
+                <a href="/location?id={{.IdArtists}}"><img class="artiste" src="{{.Images}}" alt="artistes" id="img"></a>
                 <h4>{{.Name}}</h4>
             </article>
             {{end}}
         </ul>
     </main>
-
-    <body background="../static/images/back_artists.jpg" class="artist_back">
-        <header>
-            <h1 class="pres"> Présentation des artistes </h1>
-            <nav class="nav1">
-                <a href="home">Page d'accueil</a>
-                <a href="dates">Dates</a>
-                <a href="artistes">Artistes</a>
-                <a href="location">Location</a>
-            </nav>
-        </header>
-        <main>
-            <form>
-                <label for="Check"></label>
-                <input class="search" type="text" name="Check" placeholder="Search for an artist or type 'all' for all the artists">
-            </form>
-            <form>
-                <label for="sort"></label>
-                <button type="submit" name="alpha" value="alpha">A-Z</button>
-                <button type="submit" name="unalpha" value="unalpha">Z-A</button>
-                <button type="submit" name="firstalbum" value="firstalbum">First Album</button>
-                <button type="submit" name="CreationDate" value="CreationDate">Creation Date</button>
-            </form>
-            <ul class="artistes">
-                {{range .}}
-                <article class="artistes-name">
-                    <a href="/location/{{.IdArtists}}"><img class="artiste" src="{{.Images}}" alt="artistes" id="img"></a>
-                    <h4>{{.Name}}</h4>
-                </article>
-                {{end}}
-            </ul>
-        </main>
-    </body>
+</body>
 
 </html>
