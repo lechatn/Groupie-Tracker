@@ -59,8 +59,7 @@ var allLocation map[string][]Locations
 var jsonList_Dates []Dates
 var homeDates map[string][]Dates
 
-var jsonList_Relations []Relations
-var allRelations map[string][]Relations
+var json_Relation Relations
 
 var port = ":8768"
 
@@ -110,48 +109,12 @@ func main() {
 	})
 
 	http.HandleFunc("/location", func(w http.ResponseWriter, r *http.Request) {
-		tt := template.Must(template.ParseFiles("./templates/location.html")) // Read the artists page
-		PageId := (r.URL.Query().Get("id"))
-		PageIdInt, _ := strconv.Atoi(PageId)
-		var allFinalData ArtistAndRelation
-		var finalDataArtAndLoc []ArtistAndRelation
-		for i := 0; i < len(jsonList_Artists); i++ {
-			if jsonList_Artists[i].IdArtists == PageIdInt {
-				allFinalData.ArtistF = jsonList_Artists[i]
-			}
-		}
-		for j := 0; j < len(jsonList_Location); j++ {
-			if jsonList_Location[j].Id == PageIdInt {
-				fmt.Println(jsonList_Location[j].Id)
-				allFinalData.RelationF = jsonList_Relations[j]
-			}
-		}
-		finalDataArtAndLoc = append(finalDataArtAndLoc, allFinalData)
-		fmt.Println(allFinalData.ArtistF)
-		tt.Execute(w, allFinalData.ArtistF)
-		// jsonList_Location = loadLocation(w, r)
-
+		loadLocation(w, r,)
 	})
 
 	http.HandleFunc("/relation", func(w http.ResponseWriter, r *http.Request) {
-		loadRelation(w, r)
-	})
-	http.HandleFunc("/JavaScript", func(w http.ResponseWriter, r *http.Request) {
-		var ville string
-		// var k string
-		for i := 0; i < len(jsonList_Location); i++ {
-			for j := 0; j < len(jsonList_Location[i].Locations); j++ {
-				ville = jsonList_Location[i].Locations[j]
-				fmt.Println(ville)
-				// k = noCountry(ville)
-			}
-		}
-		testeu := struct {
-			Variable string `json:"vill"`
-		}{
-			Variable: ville,
-		}
-		json.NewEncoder(w).Encode(testeu)
+		id := r.URL.Query().Get("id")
+		loadRelation(w, r, id)
 	})
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
@@ -180,7 +143,7 @@ func loadArtistes(w http.ResponseWriter, r *http.Request) []Artist {
 	}
 	errUnmarshall1 := json.Unmarshal(body_Artists, &jsonList_Artists)
 	if errUnmarshall1 != nil {
-		fmt.Println("Error6")
+		fmt.Println("Error60")
 		os.Exit(1)
 	}
 	redirect := r.FormValue("redirect")
@@ -208,7 +171,7 @@ func loadDates(w http.ResponseWriter, r *http.Request) {
 
 	errUnmarshall2 := json.Unmarshal(body_Dates, &homeDates)
 	if errUnmarshall2 != nil {
-		fmt.Println("Error9")
+		fmt.Println("Error15")
 		return
 	}
 	jsonList_Dates = homeDates["index"]
@@ -218,9 +181,9 @@ func loadDates(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func loadLocation(w http.ResponseWriter, r *http.Request) []Locations {
-	url_Locations := "https://groupietrackers.herokuapp.com/api/locations"
+func loadLocation(w http.ResponseWriter, r *http.Request) {
 
+	url_Locations := "https://groupietrackers.herokuapp.com/api/locations/"
 	response_Location, err := http.Get(url_Locations)
 	if err != nil {
 		fmt.Println("Error7")
@@ -240,15 +203,14 @@ func loadLocation(w http.ResponseWriter, r *http.Request) []Locations {
 		fmt.Println("Error9")
 		return nil
 	}
-	jsonList_Location = allLocation["index"]
 
 	tLocation := template.Must(template.ParseFiles("./templates/location.html")) // Read the location page
 	tLocation.Execute(w, jsonList_Location)
 	return jsonList_Location
 }
 
-func loadRelation(w http.ResponseWriter, r *http.Request) {
-	url_Relations := "https://groupietrackers.herokuapp.com/api/relation"
+func loadRelation(w http.ResponseWriter, r *http.Request, id string) {
+	url_Relations := "https://groupietrackers.herokuapp.com/api/relation/"+id
 
 	response_Relations, err := http.Get(url_Relations)
 	if err != nil {
@@ -264,31 +226,18 @@ func loadRelation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	errUnmarshall5 := json.Unmarshal(body_Relations, &allRelations)
-	if errUnmarshall5 != nil {
-		fmt.Println("Error6")
+	//fmt.Println(body_Relations)
+	
+	errUnmarshall3 := json.Unmarshal(body_Relations, &json_Relation)
+	if errUnmarshall3 != nil {
+		fmt.Println(errUnmarshall3)
 		return
 	}
 
-	jsonList_Relations = allRelations["index"]
-	for j := 0; j < len(jsonList_Relations); j++ {
-		if jsonList_Relations[j].Id == 2 {
-			fmt.Println(jsonList_Relations[j].DateLocation)
-		}
-	}
+	fmt.Println(json_Relation.DateLocation)
 
-	tRelation := template.Must(template.ParseFiles("./templates/relation.html")) // Read the relation page
-	tRelation.Execute(w, jsonList_Relations)
-}
-
-func noCountry(villeAndCountry string) string {
-	var villeNoCountry string
-	for i, _ := range villeAndCountry {
-		if villeAndCountry[i] == '-' {
-			villeNoCountry = villeAndCountry[0:i]
-		}
-	}
-	return villeNoCountry
+	tRelation := template.Must(template.ParseFiles("./templates/location.html")) // Read the relation page
+	tRelation.Execute(w, json_Relation)
 }
 
 func SearchArtist(w http.ResponseWriter, r *http.Request, jsonList_Artists []Artist, originalData []Artist, lettre string) []Artist {
