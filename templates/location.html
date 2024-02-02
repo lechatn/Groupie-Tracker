@@ -7,7 +7,8 @@
     <title> Location </title>
 </head>
 <body>
-    <p>{{.Id}}</p>
-    <p>{{.DateLocation}}</p>
+    {{range $key, $value := .DateLocation}}
+        <p>{{printf "%s: %s" $key $value}}</p>
+    {{end}}
 </body>
 </html>

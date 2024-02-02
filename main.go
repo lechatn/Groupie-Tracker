@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strconv"
 
 	//"net/url"
 	//"sort"
@@ -110,7 +111,9 @@ func main() {
 
 	http.HandleFunc("/relation", func(w http.ResponseWriter, r *http.Request) {
 		id := r.URL.Query().Get("id")
-		loadRelation(w, r, id)
+		id_int, _ := strconv.Atoi(id)
+		infos_artist := jsonList_Artists[id_int-1]
+		loadRelation(w, r, id,infos_artist)
 	})
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
@@ -202,7 +205,7 @@ func loadLocation(w http.ResponseWriter, r *http.Request) {
 	tLocation.Execute(w, jsonList_Location)
 }
 
-func loadRelation(w http.ResponseWriter, r *http.Request, id string) {
+func loadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artist Artist) {
 	url_Relations := "https://groupietrackers.herokuapp.com/api/relation/"+id
 
 	response_Relations, err := http.Get(url_Relations)
