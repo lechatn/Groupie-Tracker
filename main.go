@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"sort"
-	"strconv"
 	"strings"
 	"text/template"
 )
@@ -109,12 +108,28 @@ func main() {
 	})
 
 	http.HandleFunc("/location", func(w http.ResponseWriter, r *http.Request) {
-		loadLocation(w, r,)
+		loadLocation(w, r)
 	})
 
 	http.HandleFunc("/relation", func(w http.ResponseWriter, r *http.Request) {
 		id := r.URL.Query().Get("id")
-		loadRelation(w, r, id)
+		json_Relation = loadRelation(w, r, id)
+	})
+	http.HandleFunc("/JavaScript", func(w http.ResponseWriter, r *http.Request) {
+		var ville Relations
+		// var k string
+		// for i := 0; i < len(jsonList_Location); i++ {
+		// 	for j := 0; j < len(jsonList_Location[i].Locations); j++ {
+		ville = json_Relation
+		// k := noCountry(ville)
+		// 	}
+		// }
+		testeu := struct {
+			Variable Relations `json:"vill"`
+		}{
+			Variable: ville,
+		}
+		json.NewEncoder(w).Encode(testeu)
 	})
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
@@ -187,7 +202,7 @@ func loadLocation(w http.ResponseWriter, r *http.Request) {
 	response_Location, err := http.Get(url_Locations)
 	if err != nil {
 		fmt.Println("Error7")
-		return nil
+		return
 	}
 
 	defer response_Location.Body.Close()
@@ -195,27 +210,25 @@ func loadLocation(w http.ResponseWriter, r *http.Request) {
 	body_Location, err := io.ReadAll(response_Location.Body)
 	if err != nil {
 		fmt.Println("Error8")
-		return nil
+		return
 	}
 
 	errUnmarshall4 := json.Unmarshal(body_Location, &allLocation)
 	if errUnmarshall4 != nil {
 		fmt.Println("Error9")
-		return nil
+		return
 	}
 
 	tLocation := template.Must(template.ParseFiles("./templates/location.html")) // Read the location page
 	tLocation.Execute(w, jsonList_Location)
-	return jsonList_Location
 }
 
-func loadRelation(w http.ResponseWriter, r *http.Request, id string) {
-	url_Relations := "https://groupietrackers.herokuapp.com/api/relation/"+id
+func loadRelation(w http.ResponseWriter, r *http.Request, id string) Relations {
+	url_Relations := "https://groupietrackers.herokuapp.com/api/relation/" + id
 
 	response_Relations, err := http.Get(url_Relations)
 	if err != nil {
 		fmt.Println("Error4")
-		return
 	}
 
 	defer response_Relations.Body.Close()
@@ -223,21 +236,20 @@ func loadRelation(w http.ResponseWriter, r *http.Request, id string) {
 	body_Relations, err := io.ReadAll(response_Relations.Body)
 	if err != nil {
 		fmt.Println("Error5")
-		return
 	}
 
 	//fmt.Println(body_Relations)
-	
+
 	errUnmarshall3 := json.Unmarshal(body_Relations, &json_Relation)
 	if errUnmarshall3 != nil {
 		fmt.Println(errUnmarshall3)
-		return
 	}
 
 	fmt.Println(json_Relation.DateLocation)
 
 	tRelation := template.Must(template.ParseFiles("./templates/location.html")) // Read the relation page
 	tRelation.Execute(w, json_Relation)
+	return json_Relation
 }
 
 func SearchArtist(w http.ResponseWriter, r *http.Request, jsonList_Artists []Artist, originalData []Artist, lettre string) []Artist {
@@ -306,4 +318,14 @@ func SortData(w http.ResponseWriter, r *http.Request, jsonList_Artists []Artist)
 		})
 	}
 	return jsonList_Artists
+}
+
+func noCountry(villeAndCountry string) string {
+	var villeNoCountry string
+	for i, _ := range villeAndCountry {
+		if villeAndCountry[i] == '-' {
+			villeNoCountry = villeAndCountry[0:i]
+		}
+	}
+	return villeNoCountry
 }
