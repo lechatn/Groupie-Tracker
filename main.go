@@ -280,11 +280,11 @@ func SortData(w http.ResponseWriter, r *http.Request, jsonList_Artists []Artist)
 	}
 	if order1 != "" {
 		sort.Slice(jsonList_Artists, func(i, j int) bool {
-			return jsonList_Artists[i].Name < jsonList_Artists[j].Name
+			return strings.ToUpper(jsonList_Artists[i].Name) < strings.ToUpper(jsonList_Artists[j].Name)
 		})
 	} else if order2 != "" {
 		sort.Slice(jsonList_Artists, func(i, j int) bool {
-			return jsonList_Artists[i].Name > jsonList_Artists[j].Name
+			return strings.ToUpper(jsonList_Artists[i].Name) > strings.ToUpper(jsonList_Artists[j].Name)
 		})
 	} else if order3 != "" {
 		sort.Slice(jsonList_Artists, func(i, j int) bool {
