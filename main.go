@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"sort"
@@ -65,8 +65,6 @@ var port = ":8768"
 var artist_create = false
 var originalData []Artist
 
-// ///////////////////////////////////////////
-
 func main() {
 	css := http.FileServer(http.Dir("style"))                // For add css to the html pages
 	http.Handle("/style/", http.StripPrefix("/style/", css)) // For add css to the html pages
@@ -117,13 +115,7 @@ func main() {
 	})
 	http.HandleFunc("/JavaScript", func(w http.ResponseWriter, r *http.Request) {
 		var ville Relations
-		// var k string
-		// for i := 0; i < len(jsonList_Location); i++ {
-		// 	for j := 0; j < len(jsonList_Location[i].Locations); j++ {
 		ville = json_Relation
-		// k := noCountry(ville)
-		// 	}
-		// }
 		testeu := struct {
 			Variable Relations `json:"vill"`
 		}{
@@ -151,7 +143,7 @@ func loadArtistes(w http.ResponseWriter, r *http.Request) []Artist {
 
 	defer response_Artists.Body.Close()
 
-	body_Artists, err := io.ReadAll(response_Artists.Body)
+	body_Artists, err := ioutil.ReadAll(response_Artists.Body)
 	if err != nil {
 		fmt.Println("Error5")
 		os.Exit(1)
@@ -178,7 +170,7 @@ func loadDates(w http.ResponseWriter, r *http.Request) {
 
 	defer response_Dates.Body.Close()
 
-	body_Dates, err := io.ReadAll(response_Dates.Body)
+	body_Dates, err := ioutil.ReadAll(response_Dates.Body)
 	if err != nil {
 		fmt.Println("Error8")
 		return
@@ -207,7 +199,7 @@ func loadLocation(w http.ResponseWriter, r *http.Request) {
 
 	defer response_Location.Body.Close()
 
-	body_Location, err := io.ReadAll(response_Location.Body)
+	body_Location, err := ioutil.ReadAll(response_Location.Body)
 	if err != nil {
 		fmt.Println("Error8")
 		return
@@ -233,7 +225,7 @@ func loadRelation(w http.ResponseWriter, r *http.Request, id string) Relations {
 
 	defer response_Relations.Body.Close()
 
-	body_Relations, err := io.ReadAll(response_Relations.Body)
+	body_Relations, err := ioutil.ReadAll(response_Relations.Body)
 	if err != nil {
 		fmt.Println("Error5")
 	}
