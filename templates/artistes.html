@@ -5,6 +5,7 @@
 <title> Artistes </title>
 <link rel="stylesheet" href="../style/style.css">
 <script src="../js/zoom.js"></script>
+<script src="../js/zoom.js"></script>
 </head>
 <body class="arriere" background="../images/OLIESY0.jpg">
   <header>
@@ -21,10 +22,15 @@
     <ul class="artistes">
       {{range .}}
       <article class="artistes-name">
-    <img class ="artiste" src="{{.Artist.Images}}" alt="artistes" id="img" onclick="zoomImg(this)">
+    <a href="/location/{{.IdArtists}}"><img class ="artiste" src="{{.Images}}" alt="artistes" id="img"></a> 
+    <h4>{{.Name}}</h4>
+      </article>
+      <article class="artistes-name">
+    <img class ="artiste" src="{{.Artist.Images}}" alt="artistes">
     <h4>{{.Artist.Name}}</h4>
       </article>
       {{end}}
     </ul>
+  </main> 
   </main> 
 </body>

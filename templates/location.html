@@ -7,11 +7,7 @@
 </head>
 <body>
     {{range .}}
-        <p>{{.Id}}</p>
-        {{range .Locations}}
-           <p>{{.}}</p>
-        {{end}}
-    <br>
+        <p>{{.Locations}}</p>
     {{end}}
 </body>
 </html>
