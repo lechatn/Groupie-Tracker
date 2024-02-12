@@ -66,6 +66,8 @@ var port = ":8768"
 var artist_create = false
 var originalData []Artist
 
+var relation map[string][]string
+
 // ///////////////////////////////////////////
 
 func main() {
@@ -114,8 +116,15 @@ func main() {
 		id := r.URL.Query().Get("id")
 		id_int, _ := strconv.Atoi(id)
 		infos_artist := jsonList_Artists[id_int-1]
-		loadRelation(w, r, id,infos_artist)
+		relation = loadRelation(w, r, id,infos_artist)
 	})
+
+	http.HandleFunc("/relationForJs", func(w http.ResponseWriter, r *http.Request) {
+		json.NewEncoder(w).Encode(relation)
+    })
+
+
+	
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
@@ -206,13 +215,13 @@ func loadLocation(w http.ResponseWriter, r *http.Request) {
 	tLocation.Execute(w, jsonList_Location)
 }
 
-func loadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artist Artist) {
+func loadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artist Artist) (map[string][]string) {
 	url_Relations := "https://groupietrackers.herokuapp.com/api/relation/"+id
 
 	response_Relations, err := http.Get(url_Relations)
 	if err != nil {
 		fmt.Println("Error4")
-		return
+		os.Exit(0)
 	}
 
 	defer response_Relations.Body.Close()
@@ -220,7 +229,7 @@ func loadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artis
 	body_Relations, err := io.ReadAll(response_Relations.Body)
 	if err != nil {
 		fmt.Println("Error5")
-		return
+		os.Exit(0)
 	}
 
 	//fmt.Println(body_Relations)
@@ -228,23 +237,19 @@ func loadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artis
 	errUnmarshall3 := json.Unmarshal(body_Relations, &json_Relation)
 	if errUnmarshall3 != nil {
 		fmt.Println(errUnmarshall3)
-		return
+		os.Exit(0)
 	}
 
 	var data Relations
 	data.Id = json_Relation.Id
 	data.DateLocation = json_Relation.DateLocation
-
-	for i:=0; i<len(jsonList_Artists); i++ {
-		id,_ := strconv.Atoi(id)
-		if jsonList_Artists[i].IdArtists == id {
-			data.Infos = jsonList_Artists[i]
-		}
-		}	
+	data.Infos = infos_artist
 
 	tRelation := template.Must(template.ParseFiles("./templates/location.html")) // Read the relation page
 	fmt.Println(data)
 	tRelation.Execute(w, data)
+
+	return data.DateLocation
 }
 
 func SearchArtist(w http.ResponseWriter, r *http.Request, jsonList_Artists []Artist, originalData []Artist, lettre string) []Artist {
