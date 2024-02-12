@@ -46,6 +46,7 @@ type Locations struct {
 type Relations struct {
 	Id           int                 `json:"id"`
 	DateLocation map[string][]string `json:"datesLocations"`
+	Infos 		 Artist 
 }
 
 var homeData map[string]interface{}
@@ -146,7 +147,7 @@ func loadArtistes(w http.ResponseWriter, r *http.Request) []Artist {
 		os.Exit(1)
 	}
 	return jsonList_Artists
-	//fmt.Println(jsonList_Artists)
+	
 
 }
 
@@ -230,10 +231,20 @@ func loadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artis
 		return
 	}
 
-	fmt.Println(json_Relation.DateLocation)
+	var data Relations
+	data.Id = json_Relation.Id
+	data.DateLocation = json_Relation.DateLocation
+
+	for i:=0; i<len(jsonList_Artists); i++ {
+		id,_ := strconv.Atoi(id)
+		if jsonList_Artists[i].IdArtists == id {
+			data.Infos = jsonList_Artists[i]
+		}
+		}	
 
 	tRelation := template.Must(template.ParseFiles("./templates/location.html")) // Read the relation page
-	tRelation.Execute(w, json_Relation)
+	fmt.Println(data)
+	tRelation.Execute(w, data)
 }
 
 func SearchArtist(w http.ResponseWriter, r *http.Request, jsonList_Artists []Artist, originalData []Artist, lettre string) []Artist {

@@ -20,6 +20,9 @@
     {{range $key, $value := .DateLocation}}
         <p>{{printf "%s: %s" $key $value}}</p>
     {{end}}
+    {{.Infos.Name}} 
+    {{.Infos.Members}}
+
 </body>
 <script src="../static/script/script.js"></script>
 </html>
