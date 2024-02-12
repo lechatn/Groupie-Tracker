@@ -1,30 +1,30 @@
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="../static/images/logo.png">
-    <title> Location </title>
+    <link rel="icon" type="image/png" href="../static/images/logo.png"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <title> Location </title>
+    
     <style>
-        #mapid {
-            height: 300px;
-            width: 300px;
+        #map {
+            height: 80%;
+            width: 80%;
+            justify-content: center;
         }
     </style>
 </head>
 
 <body>
-    <!-- <p>{{.DateLocation}}</p> -->
-    <!-- <img class="artiste" src="{{.Images}}" alt="artistes" id="img"></a>
-    <p>{{.Name}}</p>
-    {{range .Members}}
-    <p>{{.}}</p>
+    <div id="map"></div>
+    {{range $key, $value := .DateLocation}}
+        <p>{{printf "%s: %s" $key $value}}</p>
     {{end}}
-    <p>{{.CreationDate}}</p>
-    <p>{{.FirstAlbum}}</p> -->
-</body>
+    {{.Infos.Name}} 
+    {{.Infos.Members}}
 
+</body>
+<script src="../static/script/script.js"></script>
 </html>

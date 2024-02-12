@@ -269,3 +269,7 @@ h4 {
     color: white;
     border: none;
 }
+
+button {
+  cursor: pointer;
+}
