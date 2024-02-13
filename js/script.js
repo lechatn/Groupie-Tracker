@@ -9,7 +9,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 fetch('http://localhost:8768/JavaScript')
     .then(response => response.json())
     .then(data => {
-        console.log('Value from Go:', data.vill);
         var ville = data.vill
         fetch('https://nominatim.openstreetmap.org/search?q=' + ville + '&format=json')
             .then(function(response) {
@@ -22,7 +21,6 @@ fetch('http://localhost:8768/JavaScript')
                 L.marker([lat, lon]).addTo(map)
                 map.setView([lat, lon], 9)
             });
-
     })
 
 

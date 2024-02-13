@@ -6,11 +6,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"strconv"
-
-	//"net/url"
-	//"sort"
 	"sort"
+	"strconv"
 	"strings"
 	"text/template"
 )
@@ -61,7 +58,7 @@ var homeDates map[string][]Dates
 
 var json_Relation Relations
 
-var port = ":8768"
+var port = ":8788"
 
 var artist_create = false
 var originalData []Artist
@@ -107,6 +104,10 @@ func main() {
 	})
 
 	http.HandleFunc("/location", func(w http.ResponseWriter, r *http.Request) {
+		var ville = json_Relation.DateLocation
+		for i := range ville {
+			mapURL := "https://nominatim.openstreetmap.org/search?q=" + ville[i] + "&format=json"
+		}
 		loadLocation(w, r)
 	})
 
@@ -114,12 +115,12 @@ func main() {
 		id := r.URL.Query().Get("id")
 		id_int, _ := strconv.Atoi(id)
 		infos_artist := jsonList_Artists[id_int-1]
-		loadRelation(w, r, id, infos_artist)
+		fmt.Println(infos_artist)
+		json_Relation = loadRelation(w, r, id, infos_artist)
 	})
-
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
-	fmt.Println("http://localhost:8768") // Creat clickable link in the terminal
+	fmt.Println("http://localhost" + port) // Creat clickable link in the terminal
 	http.ListenAndServe(port, nil)
 
 }
@@ -207,7 +208,7 @@ func loadLocation(w http.ResponseWriter, r *http.Request) {
 	tLocation.Execute(w, jsonList_Location)
 }
 
-func loadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artist Artist) {
+func loadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artist Artist) Relations {
 	url_Relations := "https://groupietrackers.herokuapp.com/api/relation/" + id
 
 	response_Relations, err := http.Get(url_Relations)
@@ -241,13 +242,13 @@ func loadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artis
 	}
 
 	tRelation := template.Must(template.ParseFiles("./templates/location.html")) // Read the relation page
-	fmt.Println(data)
+	// fmt.Println(data.DateLocation)
 	tRelation.Execute(w, data)
+	return json_Relation
 }
 
 func SearchArtist(w http.ResponseWriter, r *http.Request, jsonList_Artists []Artist, originalData []Artist, lettre string) []Artist {
 	var new_data []Artist
-	//fmt.Println(lettre)
 	if lettre == "" {
 		return jsonList_Artists
 	}
