@@ -17,6 +17,12 @@
 </head>
 <body>
     <div id="map"></div>
+    {{range $key, $value := .DateLocation}}
+        <p>{{printf "%s: %s" $key $value}}</p>
+    {{end}}
+    {{.Infos.Name}} 
+    {{.Infos.Members}}
+
 </body>
-<script src="../static/script/script_location.js"></script>
+<script src="../static/script/script_relation.js"></script>
 </html>
