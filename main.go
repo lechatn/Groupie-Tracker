@@ -6,9 +6,6 @@ import (
 	"io"
 	"net/http"
 	"os"
-
-	//"net/url"
-	//"sort"
 	"sort"
 	"strings"
 	"text/template"
@@ -78,7 +75,7 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		tHome := template.Must(template.ParseFiles("./templates/home.html"))
 		tHome.Execute(w, nil)
-		
+
 	})
 
 	http.HandleFunc("/artistes", func(w http.ResponseWriter, r *http.Request) {
@@ -241,7 +238,7 @@ func SearchArtist(w http.ResponseWriter, r *http.Request, jsonList_Artists []Art
 		return jsonList_Artists
 	}
 	if len(originalData) != len(jsonList_Artists) {
-		fmt.Println("maj")
+		// fmt.Println("maj")
 		jsonList_Artists = originalData
 	}
 	if strings.ToUpper(lettre) == "ALL" {
@@ -301,4 +298,3 @@ func SortData(w http.ResponseWriter, r *http.Request, jsonList_Artists []Artist)
 	}
 	return jsonList_Artists
 }
-
