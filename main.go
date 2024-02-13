@@ -254,7 +254,7 @@ func SearchArtist(w http.ResponseWriter, r *http.Request, jsonList_Artists []Art
 		return jsonList_Artists
 	}
 	if len(originalData) != len(jsonList_Artists) {
-		fmt.Println("maj")
+		// fmt.Println("maj")
 		jsonList_Artists = originalData
 	}
 	if strings.ToUpper(lettre) == "ALL" {
