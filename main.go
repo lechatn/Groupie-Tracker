@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"sort"
+	"strconv"
 	"strings"
 	"text/template"
 )
@@ -42,6 +43,7 @@ type Locations struct {
 type Relations struct {
 	Id           int                 `json:"id"`
 	DateLocation map[string][]string `json:"datesLocations"`
+	Infos        Artist
 }
 
 var homeData map[string]interface{}
@@ -54,13 +56,14 @@ var allLocation map[string][]Locations
 var jsonList_Dates []Dates
 var homeDates map[string][]Dates
 
-var jsonList_Relations []Relations
-var allRelations map[string][]Relations
+var json_Relation Relations
 
 var port = ":8768"
 
 var artist_create = false
 var originalData []Artist
+
+var relation map[string][]string
 
 // ///////////////////////////////////////////
 
@@ -109,8 +112,17 @@ func main() {
 	})
 
 	http.HandleFunc("/relation", func(w http.ResponseWriter, r *http.Request) {
-		loadRelation(w, r)
+		id := r.URL.Query().Get("id")
+		id_int, _ := strconv.Atoi(id)
+		infos_artist := jsonList_Artists[id_int-1]
+		relation = loadRelation(w, r, id, infos_artist)
 	})
+
+	http.HandleFunc("/relationForJs", func(w http.ResponseWriter, r *http.Request) {
+		json.NewEncoder(w).Encode(relation)
+	})
+
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	fmt.Println("http://localhost:8768") // Creat clickable link in the terminal
 	http.ListenAndServe(port, nil)
@@ -136,11 +148,10 @@ func loadArtistes(w http.ResponseWriter, r *http.Request) []Artist {
 	}
 	errUnmarshall1 := json.Unmarshal(body_Artists, &jsonList_Artists)
 	if errUnmarshall1 != nil {
-		fmt.Println("Error6")
+		fmt.Println("Error60")
 		os.Exit(1)
 	}
 	return jsonList_Artists
-	//fmt.Println(jsonList_Artists)
 
 }
 
@@ -162,7 +173,7 @@ func loadDates(w http.ResponseWriter, r *http.Request) {
 
 	errUnmarshall2 := json.Unmarshal(body_Dates, &homeDates)
 	if errUnmarshall2 != nil {
-		fmt.Println("Error9")
+		fmt.Println("Error15")
 		return
 	}
 	jsonList_Dates = homeDates["index"]
@@ -173,8 +184,8 @@ func loadDates(w http.ResponseWriter, r *http.Request) {
 }
 
 func loadLocation(w http.ResponseWriter, r *http.Request) {
-	url_Locations := "https://groupietrackers.herokuapp.com/api/locations"
 
+	url_Locations := "https://groupietrackers.herokuapp.com/api/locations/"
 	response_Location, err := http.Get(url_Locations)
 	if err != nil {
 		fmt.Println("Error7")
@@ -194,20 +205,18 @@ func loadLocation(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Error9")
 		return
 	}
-	jsonList_Location = allLocation["index"]
-	//fmt.Println(jsonList_Location)
 
 	tLocation := template.Must(template.ParseFiles("./templates/location.html")) // Read the location page
 	tLocation.Execute(w, jsonList_Location)
 }
 
-func loadRelation(w http.ResponseWriter, r *http.Request) {
-	url_Relations := "https://groupietrackers.herokuapp.com/api/relation"
+func loadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artist Artist) map[string][]string {
+	url_Relations := "https://groupietrackers.herokuapp.com/api/relation/" + id
 
 	response_Relations, err := http.Get(url_Relations)
 	if err != nil {
 		fmt.Println("Error4")
-		return
+		os.Exit(0)
 	}
 
 	defer response_Relations.Body.Close()
@@ -215,20 +224,27 @@ func loadRelation(w http.ResponseWriter, r *http.Request) {
 	body_Relations, err := io.ReadAll(response_Relations.Body)
 	if err != nil {
 		fmt.Println("Error5")
-		return
+		os.Exit(0)
 	}
 
-	errUnmarshall5 := json.Unmarshal(body_Relations, &allRelations)
-	if errUnmarshall5 != nil {
-		fmt.Println("Error6")
-		return
+	//fmt.Println(body_Relations)
+
+	errUnmarshall3 := json.Unmarshal(body_Relations, &json_Relation)
+	if errUnmarshall3 != nil {
+		fmt.Println(errUnmarshall3)
+		os.Exit(0)
 	}
 
-	jsonList_Relations = allRelations["index"]
-	//fmt.Println(jsonList_Relations)
+	var data Relations
+	data.Id = json_Relation.Id
+	data.DateLocation = json_Relation.DateLocation
+	data.Infos = infos_artist
 
-	tRelation := template.Must(template.ParseFiles("./templates/relation.html")) // Read the relation page
-	tRelation.Execute(w, jsonList_Relations)
+	tRelation := template.Must(template.ParseFiles("./templates/location.html")) // Read the relation page
+	fmt.Println(data)
+	tRelation.Execute(w, data)
+
+	return data.DateLocation
 }
 
 func SearchArtist(w http.ResponseWriter, r *http.Request, jsonList_Artists []Artist, originalData []Artist, lettre string) []Artist {
@@ -275,11 +291,11 @@ func SortData(w http.ResponseWriter, r *http.Request, jsonList_Artists []Artist)
 	}
 	if order1 != "" {
 		sort.Slice(jsonList_Artists, func(i, j int) bool {
-			return jsonList_Artists[i].Name < jsonList_Artists[j].Name
+			return strings.ToUpper(jsonList_Artists[i].Name) < strings.ToUpper(jsonList_Artists[j].Name)
 		})
 	} else if order2 != "" {
 		sort.Slice(jsonList_Artists, func(i, j int) bool {
-			return jsonList_Artists[i].Name > jsonList_Artists[j].Name
+			return strings.ToUpper(jsonList_Artists[i].Name) > strings.ToUpper(jsonList_Artists[j].Name)
 		})
 	} else if order3 != "" {
 		sort.Slice(jsonList_Artists, func(i, j int) bool {
