@@ -4,35 +4,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="../static/images/logo.png"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="../static/style/style.css"/>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
     <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 
-    <title> Location </title>
-    
-    <style>
-        #map {
-            height: 80%;
-            width: 80%;
-            justify-content: center;
-        }
-    </style>
+<title> Location </title>
 </head>
 <body>
-    <nav class="nav">
+    <header>
+    <nav class="nav2">
         <a href="">Page d'accueil</a>
         <a href="artistes">Artistes</a>
         <a href="location">Location</a> 
     </nav> 
+    </header>
     <div id="map"></div>
+    <section class="locdesc">
     {{range $key, $value := .DateLocation}}
         <p>{{printf "%s: %s" $key $value}}</p>
     {{end}}
     {{.Infos.Name}} 
     {{.Infos.Members}}
-
+    </section>
 </body>
 <script src="../static/script/script_relation.js"></script>
 </html>

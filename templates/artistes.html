@@ -5,9 +5,8 @@
 <title> Artistes </title>
 <link rel="icon" type="image/png" href="../static/images/logo.png">
 <link rel="stylesheet" href="../static/style/style.css">
-<script src="../js/zoom.js"></script>
 </head>
-<body background="../static/images/back_artists.jpg" class="artist_back">
+<body background="../static/images/back_artists.jpg" class="arriere">
   <header>
     <h1 class="pres"> Présentation des artistes </h1>
     <nav class="nav1">
@@ -17,24 +16,26 @@
   </nav>
   </header>
   <main>
-    <form>
-      <label for="Check"></label>
-      <input class="search" type="text" name="Check" placeholder="Search for an artist or type 'all' for all the artists">
-    </form>  
     <form >
+      <label for="Check"></label>
+      <input class="search1" type="text" name="Check" placeholder="Search for an artist or type 'all' for all the artists">
+    </form>
+  
+    <form class="filter">
       <label for="sort"></label>
-      <button type="submit" name="alpha" value="alpha">A-Z</button>
-      <button type="submit" name="unalpha"  value="unalpha">Z-A</button>
-      <button type="submit" name="firstalbum" value="firstalbum">First Album</button>
-      <button type="submit" name="CreationDate" value="CreationDate">Creation Date</button>
+      <button class="button" type="submit" name="alpha" value="alpha">A-Z</button>
+      <button class="button" type="submit" name="unalpha"  value="unalpha">Z-A</button>
+      <button class="button" type="submit" name="firstalbum" value="firstalbum">First Album</button>
+      <button class="button" type="submit" name="CreationDate" value="CreationDate">Creation Date</button>
     </form> 
     <p>Restart</p>
-    <a href="artistes?Check=all"><button>View all the artist</button></a>
+    <a class="view" href="artistes?Check=all"><button class="buton">View all the artist</button></a>
     <ul class="artistes">
       {{range .}}
       <article class="artistes-name">
     <a href="relation?id={{.IdArtists}}"><img class ="artiste" src="{{.Images}}" alt="artistes" id="img"></a>
     <h4>{{.Name}}</h4>
+    <p class="info"> Clique sur l'artiste pour avoir de plus amples informations ! </p>
       </article>
       {{end}}
     </ul>
