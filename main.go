@@ -6,8 +6,8 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"strconv"
 	"sort"
+	"strconv"
 	"strings"
 	"text/template"
 )
@@ -85,20 +85,12 @@ func main() {
 	})
 
 	http.HandleFunc("/artistes", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println(infos_artist)
-		fmt.Println(data_artist)
 		if artist_create == false {
 			jsonList_Artists = loadArtistes(w, r)
 			artist_create = true
 			originalData = jsonList_Artists
 		}
 		tArtistes := template.Must(template.ParseFiles("./templates/artistes.html")) // Read the artists page
-		if r.FormValue("Search_artist") != "" {
-			fmt.Println("test")
-			lettre := r.FormValue("Search_artist")
-			jsonList_Artists = SearchArtist(w, r, jsonList_Artists, originalData, lettre)
-			lettre = ""
-		}
 		if r.FormValue("Check") != "" {
 			lettre := r.FormValue("Check")
 			jsonList_Artists = SearchArtist(w, r, jsonList_Artists, originalData, lettre)
@@ -118,10 +110,19 @@ func main() {
 
 	http.HandleFunc("/relation", func(w http.ResponseWriter, r *http.Request) {
 		id := r.URL.Query().Get("id")
+		fmt.Println(id)
 		id_int, _ := strconv.Atoi(id)
-		infos_artist := originalData[id_int-1]
+		sort.Slice(originalData, func(i, j int) bool {
+			return originalData[i].IdArtists < originalData[j].IdArtists
+		})
+		if len(originalData) == len(jsonList_Artists) {
+			fmt.Println("cas1")
+			infos_artist = jsonList_Artists[id_int-1]
+		} else {
+			fmt.Println("cas2")
+			infos_artist = originalData[id_int-1]
+		}
 		data_artist = loadRelation(w, r, id, infos_artist)
-		infos_artist = Artist{}
 	})
 
 	http.HandleFunc("/relationForJs", func(w http.ResponseWriter, r *http.Request) {
@@ -132,7 +133,6 @@ func main() {
 	http.HandleFunc("/locationForJs", func(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(location)
 	})
-
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
@@ -256,6 +256,7 @@ func loadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artis
 		fmt.Println(errUnmarshall3)
 		os.Exit(0)
 	}
+	
 	data := Relations{}
 	data.Id = json_Relation.Id
 	data.DateLocation = json_Relation.DateLocation
@@ -276,7 +277,7 @@ func SearchArtist(w http.ResponseWriter, r *http.Request, jsonList_Artists []Art
 		return jsonList_Artists
 	}
 	if len(originalData) != len(jsonList_Artists) {
-		fmt.Println("maj")
+		//fmt.Println(originalData)
 		jsonList_Artists = originalData
 	}
 	if strings.ToUpper(lettre) == "ALL" {
@@ -374,3 +375,10 @@ func SearchLatLon(relation map[string][]string) map[string][]string {
 	//fmt.Println(res)
 	return res
 }
+
+/*		if r.FormValue("Search_artist") != "" {
+		//fmt.Println("test")
+		lettre := r.FormValue("Search_artist")
+		jsonList_Artists = SearchArtist(w, r, jsonList_Artists, originalData, lettre)
+		lettre = ""
+	}*/
