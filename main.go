@@ -43,18 +43,18 @@ type Locations struct {
 type Relations struct {
 	Id           int                 `json:"id"`
 	DateLocation map[string][]string `json:"datesLocations"`
+	Coordonnees  map[string][]string
 	Infos        Artist
 }
 
-var homeData map[string]interface{}
+type Place struct {
+	Lat string `json:"lat"`
+	Lon string `json:"lon"`
+}
 
 var jsonList_Artists []Artist
 
-var jsonList_Location []Locations
 var allLocation map[string][]Locations
-
-var jsonList_Dates []Dates
-var homeDates map[string][]Dates
 
 var json_Relation Relations
 
@@ -64,6 +64,11 @@ var artist_create = false
 var originalData []Artist
 
 var relation map[string][]string
+var location []Locations
+
+var data_artist Relations
+
+var infos_artist Artist
 
 // ///////////////////////////////////////////
 
@@ -82,6 +87,8 @@ func main() {
 	})
 
 	http.HandleFunc("/artistes", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println(infos_artist)
+		fmt.Println(data_artist)
 		if artist_create == false {
 			jsonList_Artists = loadArtistes(w, r)
 			artist_create = true
@@ -108,18 +115,24 @@ func main() {
 	})
 
 	http.HandleFunc("/location", func(w http.ResponseWriter, r *http.Request) {
-		loadLocation(w, r)
+		location = loadLocation(w, r)
 	})
 
 	http.HandleFunc("/relation", func(w http.ResponseWriter, r *http.Request) {
 		id := r.URL.Query().Get("id")
 		id_int, _ := strconv.Atoi(id)
 		infos_artist := jsonList_Artists[id_int-1]
-		relation = loadRelation(w, r, id, infos_artist)
+		data_artist = loadRelation(w, r, id, infos_artist)
+		infos_artist = Artist{}
 	})
 
 	http.HandleFunc("/relationForJs", func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(relation)
+		json.NewEncoder(w).Encode(data_artist)
+		data_artist = Relations{}
+	})
+
+	http.HandleFunc("/locationForJs", func(w http.ResponseWriter, r *http.Request) {
+		json.NewEncoder(w).Encode(location)
 	})
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
@@ -156,6 +169,9 @@ func loadArtistes(w http.ResponseWriter, r *http.Request) []Artist {
 }
 
 func loadDates(w http.ResponseWriter, r *http.Request) {
+	var jsonList_Dates []Dates
+	var homeDates map[string][]Dates
+
 	url_Dates := "https://groupietrackers.herokuapp.com/api/dates"
 	response_Dates, err := http.Get(url_Dates)
 	if err != nil {
@@ -183,13 +199,15 @@ func loadDates(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func loadLocation(w http.ResponseWriter, r *http.Request) {
+func loadLocation(w http.ResponseWriter, r *http.Request) []Locations {
 
-	url_Locations := "https://groupietrackers.herokuapp.com/api/locations/"
+	var allLocation map[string][]Locations
+
+	url_Locations := "https://groupietrackers.herokuapp.com/api/locations"
 	response_Location, err := http.Get(url_Locations)
 	if err != nil {
 		fmt.Println("Error7")
-		return
+		os.Exit(0)
 	}
 
 	defer response_Location.Body.Close()
@@ -197,20 +215,25 @@ func loadLocation(w http.ResponseWriter, r *http.Request) {
 	body_Location, err := io.ReadAll(response_Location.Body)
 	if err != nil {
 		fmt.Println("Error8")
-		return
+		os.Exit(0)
 	}
 
 	errUnmarshall4 := json.Unmarshal(body_Location, &allLocation)
 	if errUnmarshall4 != nil {
 		fmt.Println("Error9")
-		return
+		os.Exit(0)
 	}
 
 	tLocation := template.Must(template.ParseFiles("./templates/location.html")) // Read the location page
-	tLocation.Execute(w, jsonList_Location)
+	tLocation.Execute(w, nil)
+
+	return allLocation["index"]
 }
 
-func loadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artist Artist) map[string][]string {
+func loadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artist Artist) Relations {
+
+	var json_Relation Relations
+
 	url_Relations := "https://groupietrackers.herokuapp.com/api/relation/" + id
 
 	response_Relations, err := http.Get(url_Relations)
@@ -234,17 +257,17 @@ func loadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artis
 		fmt.Println(errUnmarshall3)
 		os.Exit(0)
 	}
-
-	var data Relations
+	data := Relations{}
 	data.Id = json_Relation.Id
 	data.DateLocation = json_Relation.DateLocation
 	data.Infos = infos_artist
+	data.Coordonnees = SearchLatLon(data.DateLocation)
 
-	tRelation := template.Must(template.ParseFiles("./templates/location.html")) // Read the relation page
-	fmt.Println(data)
+	tRelation := template.Must(template.ParseFiles("./templates/relation.html")) // Read the relation page
+	//fmt.Println(data)
 	tRelation.Execute(w, data)
 
-	return data.DateLocation
+	return data
 }
 
 func SearchArtist(w http.ResponseWriter, r *http.Request, jsonList_Artists []Artist, originalData []Artist, lettre string) []Artist {
@@ -313,4 +336,42 @@ func SortData(w http.ResponseWriter, r *http.Request, jsonList_Artists []Artist)
 		})
 	}
 	return jsonList_Artists
+}
+
+func SearchLatLon(relation map[string][]string) map[string][]string {
+	res := make(map[string][]string, len(relation))
+	for city := range relation {
+		city = strings.ReplaceAll(city, "-", ",")
+		url := "https://nominatim.openstreetmap.org/search?q=" + city + "&format=json"
+		response, err := http.Get(url)
+
+		if err != nil {
+			fmt.Println("Error1")
+			os.Exit(0)
+		}
+
+		defer response.Body.Close()
+
+		body, err := io.ReadAll(response.Body)
+		if err != nil {
+			fmt.Println("Error2")
+			os.Exit(0)
+		}
+
+		var data []Place
+		errUnmarshall := json.Unmarshal(body, &data)
+		if errUnmarshall != nil {
+			fmt.Println("Error3")
+			os.Exit(0)
+		}
+
+		var inter []string
+		inter = append(inter, data[0].Lat)
+		inter = append(inter, data[0].Lon)
+		res[city] = inter
+		inter = nil
+
+	}
+	//fmt.Println(res)
+	return res
 }

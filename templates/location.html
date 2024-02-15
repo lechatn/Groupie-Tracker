@@ -3,8 +3,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="../static/images/logo.png"/>
+    <!--Default leaflet-->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!--Leaflet for markclusters -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+    <!----> 
     <title> Location </title>
     
     <style>
@@ -17,12 +23,6 @@
 </head>
 <body>
     <div id="map"></div>
-    {{range $key, $value := .DateLocation}}
-        <p>{{printf "%s: %s" $key $value}}</p>
-    {{end}}
-    {{.Infos.Name}} 
-    {{.Infos.Members}}
-
 </body>
-<script src="../static/script/script.js"></script>
+<script src="../static/script/script_location.js"></script>
 </html>
