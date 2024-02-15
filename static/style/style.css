@@ -1,28 +1,16 @@
-.artist_back {
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-}
-
 .back {
     background-attachment: fixed;
     background-repeat: no-repeat;
     background-size: 100% 100%;
-}
-
-.artist_back {
+  }
+  
+  .arriere {
     background-attachment: fixed;
     background-repeat: no-repeat;
     background-size: 100% 100%;
-}
-
-.arriere {
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-}
-
-.search {
+  }
+  
+  .search {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -40,9 +28,9 @@
     border-radius: 20px;
     border: none;
     background-color: rgb(255, 255, 255);
-}
-
-.search1 {
+  }
+  
+  .search1 {
     padding: 0.75rem;
     width: 30%;
     margin-left: 33rem;
@@ -50,13 +38,13 @@
     border-radius: 20px;
     border: none;
     background-color: rgb(255, 255, 255);
-}
-
-.nav {
+  }
+  
+  .nav {
     align-items: center;
-}
-
-nav a {
+  }
+  
+  nav a {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -67,26 +55,27 @@ nav a {
     color: #ffffff;
     background: transparent;
     height: 30px;
+    margin-left: 11%;
     padding: 0 10px;
-    font-size: 20px;
+    font-size: 17px;
     transition: .5s;
     width: 10rem;
-}
-
-nav a:hover {
+  }
+  
+  nav a:hover {
     background: rgb(194, 4, 194);
     border-radius: 20px;
     width: 140px;
     height: 30px;
-}
-
-.color {
+  }
+  
+  .color {
     margin-left: 25rem;
     display: grid;
     margin-top: 2rem;
-}
-
-.logo {
+  }
+  
+  .logo {
     display: grid;
     align-items: right;
     width: 10rem;
@@ -94,22 +83,9 @@ nav a:hover {
     border-radius: 80px;
     margin-left: 80rem;
     margin-top: -6rem;
-}
-
-
-/*.artistes {
-  display: grid;
-  grid-area: auto;
-  border-radius: 40px;
-}
-
-.artistes:hover {
-  transform: scale(1.1);
-  transition: 1,2s; 
+  }
   
-} */
-
-h1 {
+  h1 {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -117,16 +93,16 @@ h1 {
     margin-top: 7rem;
     color: beige;
     font-family: 'Courier New', Courier, monospace;
-}
-
-h3 {
+  }
+  
+  h3 {
     display: flex;
     justify-content: center;
     color: beige;
     font-family: 'Courier New', Courier, monospace;
-}
-
-a {
+  }
+  
+  a {
     display: flex;
     justify-content: center;
     align-content: center;
@@ -141,9 +117,9 @@ a {
     filter: blur(0);
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
-}
-
-a span {
+  }
+  
+  a span {
     font-size: 40px;
     margin: 0;
     padding: 0;
@@ -151,41 +127,41 @@ a span {
     position: relative;
     transition: transform cubic-bezier(0.77, 0, 0.175, 1) 250ms;
     padding: 0 0.1em;
-}
-
-a span:nth-child(0n) {
+  }
+  
+  a span:nth-child(0n) {
     transition-delay: 0ms;
-}
-
-a span:nth-child(0n):after {
+  }
+  
+  a span:nth-child(0n):after {
     transition-delay: 0ms;
-}
-
-a span:nth-child(1n) {
+  }
+  
+  a span:nth-child(1n) {
     transition-delay: 83.3333333333ms;
-}
-
-a span:nth-child(1n):after {
+  }
+  
+  a span:nth-child(1n):after {
     transition-delay: 83.3333333333ms;
-}
-
-a span:nth-child(2n) {
+  }
+  
+  a span:nth-child(2n) {
     transition-delay: 166.6666666667ms;
-}
-
-a span:nth-child(2n):after {
+  }
+  
+  a span:nth-child(2n):after {
     transition-delay: 166.6666666667ms;
-}
-
-a span:nth-child(3n) {
+  }
+  
+  a span:nth-child(3n) {
     transition-delay: 250ms;
-}
-
-a span:nth-child(3n):after {
+  }
+  
+  a span:nth-child(3n):after {
     transition-delay: 250ms;
-}
-
-a span:after {
+  }
+  
+  a span:after {
     content: '';
     position: absolute;
     top: 100%;
@@ -196,80 +172,99 @@ a span:after {
     transform-origin: top center;
     transform: scaley(0.1);
     transition: transform cubic-bezier(0.77, 0, 0.175, 1) 250ms;
-}
-
-a:hover span {
+  }
+  
+  a:hover span {
     transform: translateY(-1em);
-}
-
-a:hover span:after {
+  }
+  
+  a:hover span:after {
     transform: scaleY(1);
-}
-
-a:active span {
+  }
+  
+  a:active span {
     transform: translateY(0);
     transition: transform cubic-bezier(0.77, 0, 0.175, 1) 125ms;
     transition-delay: 0 !important;
-}
-
-a:active span:after {
+  }
+  
+  a:active span:after {
     transform: scaleY(0.5);
     transition: transform cubic-bezier(0.77, 0, 0.175, 1) 125ms;
     transition-delay: 0 !important;
-}
-
-.artistes {
+  }
+  
+  .artistes {
     display: grid;
     grid-template-rows: 1fr 1fr;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 4rem;
-}
-
-
-/* .artistes :hover {
-  border: solid 5px rgb(255, 199, 58);
-  border-radius: 50px;
-  transition: 0.3s;
-} */
-
-img#img.artiste {
+  }
+  
+  .artistes-name :hover {
+    opacity: 0.4;
+  }
+  
+  .info {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 4rem;
+    margin-left: 40%;
+    margin-top: -90%;
+    color: white;
+    font-size: 1.2rem;
+  }
+  
+  .info :hover {
+    opacity: 1;
+  }
+  
+  
+  img#img.artiste {
     display: flex;
     margin-top: 25%;
     margin-left: 8%;
     border: solid 4px rgb(194, 4, 194);
     border-radius: 50px;
-}
-
-.pres {
+  }
+  
+  .pres {
     display: flex;
     align-content: center;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     color: rgb(255, 255, 255);
     margin-top: 2rem;
-}
-
-.nav1 {
+  }
+  
+  .nav1 {
     display: flex;
     align-content: center;
     justify-content: center;
     align-items: center;
     background-color: rgb(0, 0, 0);
     border-radius: 70px;
-    width: 50%;
-    margin-left: 25%;
-}
-
-.artistes-name {
+    width: 40%;
+    margin-left: 30%;
+  }
+  
+  .artistes-name {
     text-align: center;
     margin-right: 3rem;
     color: black;
-}
-
-h4 {
+  }
+  
+  h4 {
     color: white;
     border: none;
-}
-
-button {
-  cursor: pointer;
-}
+  }
+  
+  .filter {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 7rem;
+    margin-left: 44%;
+    height: 4rem;
+    margin-top: 2%;
+  }
+  

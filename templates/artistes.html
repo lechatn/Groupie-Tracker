@@ -10,9 +10,8 @@
     <title> Artistes </title>
     <link rel="icon" type="image/png" href="../static/images/logo.png">
     <link rel="stylesheet" href="../static/style/style.css">
-    <script src="../js/zoom.js"></script>
 </head>
-<body background="../images/back_artists.jpg" class="arriere">
+<body background="../static/images/back_artists.jpg" class="arriere">
   <header>
     <h1 class="pres"> Présentation des artistes </h1>
     <nav class="nav1">
@@ -37,7 +36,7 @@
     <ul class="artistes">
       {{range .}}
       <article class="artistes-name">
-    <a href="/location/{{.IdArtists}}"><img class ="artiste" src="{{.Images}}" alt="artistes" id="img"></a>
+    <a href="relation?id={{.IdArtists}}"><img class ="artiste" src="{{.Images}}" alt="artistes" id="img"></a>
     <h4>{{.Name}}</h4>
     <p class="info"> Clique sur l'artiste pour avoir de plus amples informations ! </p>
       </article>
