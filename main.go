@@ -118,7 +118,7 @@ func main() {
 	http.HandleFunc("/relation", func(w http.ResponseWriter, r *http.Request) {
 		id := r.URL.Query().Get("id")
 		id_int, _ := strconv.Atoi(id)
-		infos_artist := jsonList_Artists[id_int-1]
+		infos_artist := originalData[id_int-1]
 		data_artist = loadRelation(w, r, id, infos_artist)
 		infos_artist = Artist{}
 	})
