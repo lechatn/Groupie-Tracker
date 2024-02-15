@@ -6,8 +6,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"strconv"
 	"sort"
+	"strconv"
 	"strings"
 	"text/template"
 )
@@ -131,7 +131,6 @@ func main() {
 	http.HandleFunc("/locationForJs", func(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(location)
 	})
-
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
