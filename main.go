@@ -7,9 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-
-	//"net/url"
-	//"sort"
 	"sort"
 	"strings"
 	"text/template"
@@ -55,15 +52,9 @@ type Place struct {
 	Lon string `json:"lon"`
 }
 
-var homeData map[string]interface{}
-
 var jsonList_Artists []Artist
 
-var jsonList_Location []Locations
 var allLocation map[string][]Locations
-
-var jsonList_Dates []Dates
-var homeDates map[string][]Dates
 
 var json_Relation Relations
 
@@ -76,6 +67,8 @@ var relation map[string][]string
 var location []Locations
 
 var data_artist Relations
+
+var infos_artist Artist
 
 // ///////////////////////////////////////////
 
@@ -92,6 +85,8 @@ func main() {
 	})
 
 	http.HandleFunc("/artistes", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println(infos_artist)
+		fmt.Println(data_artist)
 		if artist_create == false {
 			jsonList_Artists = loadArtistes(w, r)
 			artist_create = true
@@ -126,16 +121,18 @@ func main() {
 		id_int, _ := strconv.Atoi(id)
 		infos_artist := jsonList_Artists[id_int-1]
 		data_artist = loadRelation(w, r, id, infos_artist)
+		infos_artist = Artist{}
 	})
 
 	http.HandleFunc("/relationForJs", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println(data_artist)
 		json.NewEncoder(w).Encode(data_artist)
+		data_artist = Relations{}
 	})
 
 	http.HandleFunc("/locationForJs", func(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(location)
 	})
+
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
@@ -171,6 +168,9 @@ func loadArtistes(w http.ResponseWriter, r *http.Request) []Artist {
 }
 
 func loadDates(w http.ResponseWriter, r *http.Request) {
+	var jsonList_Dates []Dates
+	var homeDates map[string][]Dates
+
 	url_Dates := "https://groupietrackers.herokuapp.com/api/dates"
 	response_Dates, err := http.Get(url_Dates)
 	if err != nil {
@@ -200,6 +200,8 @@ func loadDates(w http.ResponseWriter, r *http.Request) {
 
 func loadLocation(w http.ResponseWriter, r *http.Request) []Locations {
 
+	var allLocation map[string][]Locations
+
 	url_Locations := "https://groupietrackers.herokuapp.com/api/locations"
 	response_Location, err := http.Get(url_Locations)
 	if err != nil {
@@ -228,6 +230,9 @@ func loadLocation(w http.ResponseWriter, r *http.Request) []Locations {
 }
 
 func loadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artist Artist) Relations {
+
+	var json_Relation Relations
+
 	url_Relations := "https://groupietrackers.herokuapp.com/api/relation/" + id
 
 	response_Relations, err := http.Get(url_Relations)
@@ -251,8 +256,7 @@ func loadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artis
 		fmt.Println(errUnmarshall3)
 		os.Exit(0)
 	}
-
-	var data Relations
+	data := Relations{}
 	data.Id = json_Relation.Id
 	data.DateLocation = json_Relation.DateLocation
 	data.Infos = infos_artist
@@ -333,7 +337,7 @@ func SortData(w http.ResponseWriter, r *http.Request, jsonList_Artists []Artist)
 	return jsonList_Artists
 }
 
-func SearchLatLon(relation map[string][]string) map[string][]string{
+func SearchLatLon(relation map[string][]string) map[string][]string {
 	res := make(map[string][]string, len(relation))
 	for city := range relation {
 		city = strings.ReplaceAll(city, "-", ",")

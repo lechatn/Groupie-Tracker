@@ -26,9 +26,7 @@ fetch('http://localhost:8768/relationForJs')
         var group = new L.featureGroup(markers); // Nous créons le groupe des marqueurs pour adapter le zoom
         map.fitBounds(group.getBounds().pad(0.5)); // Nous demandons à ce que tous les marqueurs soient visibles, et ajoutons un padding (pad(0.5)) pour que les marqueurs ne soient pas coupés
         map.addLayer(markerClusters); 
-       
-        
-        
+
     }
     );
 
