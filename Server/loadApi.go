@@ -1,14 +1,15 @@
 package Server
 
 import (
+	"Groupie/structure"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"text/template"
-	"Groupie/structure"
 )
 
 func LoadArtistes(w http.ResponseWriter, r *http.Request) []structure.Artist {
@@ -38,8 +39,32 @@ func LoadArtistes(w http.ResponseWriter, r *http.Request) []structure.Artist {
 }
 
 func LoadLocation(w http.ResponseWriter, r *http.Request, data []structure.Artist) {
+	//res := make([]map[string][]string, len(data))
+	for i := 0; i < len(data); i++ {
+		url_location := "https://groupietrackers.herokuapp.com/api/relation/" + strconv.Itoa(data[i].IdArtists)
 
-	//A faire
+		response_location, err := http.Get(url_location)
+		if err != nil {
+			fmt.Println("Error1")
+			os.Exit(1)
+		}
+
+		defer response_location.Body.Close()
+
+		body_location, err := io.ReadAll(response_location.Body)
+		if err != nil {
+			fmt.Println("Error5")
+			os.Exit(1)
+		}
+
+		var json_location structure.Relations
+		errUnmarshall2 := json.Unmarshal(body_location, &json_location)
+		if errUnmarshall2 != nil {
+			fmt.Println("Error60")
+			os.Exit(1)
+		}
+
+	}
 
 }
 
@@ -80,15 +105,9 @@ func LoadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artis
 	tRelation := template.Must(template.ParseFiles("./templates/relation.html")) // Read the relation page
 	//fmt.Println(data)
 	tRelation.Execute(w, data)
-
+	//fmt.Println(data)
 	return data
 }
-
-
-
-
-
-
 
 func SearchLatLon(relation map[string][]string) map[string][]string {
 	res := make(map[string][]string, len(relation))
@@ -127,3 +146,6 @@ func SearchLatLon(relation map[string][]string) map[string][]string {
 	//fmt.Println(res)
 	return res
 }
+
+
+//Probleme API a l id 47, ville inconnu
