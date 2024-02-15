@@ -7,9 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-
-	//"net/url"
-	//"sort"
 	"sort"
 	"strings"
 	"text/template"
@@ -46,18 +43,18 @@ type Locations struct {
 type Relations struct {
 	Id           int                 `json:"id"`
 	DateLocation map[string][]string `json:"datesLocations"`
+	Coordonnees  map[string][]string
 	Infos        Artist
 }
 
-var homeData map[string]interface{}
+type Place struct {
+	Lat string `json:"lat"`
+	Lon string `json:"lon"`
+}
 
 var jsonList_Artists []Artist
 
-var jsonList_Location []Locations
 var allLocation map[string][]Locations
-
-var jsonList_Dates []Dates
-var homeDates map[string][]Dates
 
 var json_Relation Relations
 
@@ -68,6 +65,10 @@ var originalData []Artist
 
 var relation map[string][]string
 var location []Locations
+
+var data_artist Relations
+
+var infos_artist Artist
 
 // ///////////////////////////////////////////
 
@@ -84,6 +85,8 @@ func main() {
 	})
 
 	http.HandleFunc("/artistes", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println(infos_artist)
+		fmt.Println(data_artist)
 		if artist_create == false {
 			jsonList_Artists = loadArtistes(w, r)
 			artist_create = true
@@ -116,18 +119,19 @@ func main() {
 		id := r.URL.Query().Get("id")
 		id_int, _ := strconv.Atoi(id)
 		infos_artist := jsonList_Artists[id_int-1]
-		relation = loadRelation(w, r, id, infos_artist)
-
-		relation = SearchLatLon(relation)
+		data_artist = loadRelation(w, r, id, infos_artist)
+		infos_artist = Artist{}
 	})
 
 	http.HandleFunc("/relationForJs", func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(relation)
+		json.NewEncoder(w).Encode(data_artist)
+		data_artist = Relations{}
 	})
 
 	http.HandleFunc("/locationForJs", func(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(location)
 	})
+
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
@@ -163,6 +167,9 @@ func loadArtistes(w http.ResponseWriter, r *http.Request) []Artist {
 }
 
 func loadDates(w http.ResponseWriter, r *http.Request) {
+	var jsonList_Dates []Dates
+	var homeDates map[string][]Dates
+
 	url_Dates := "https://groupietrackers.herokuapp.com/api/dates"
 	response_Dates, err := http.Get(url_Dates)
 	if err != nil {
@@ -192,6 +199,8 @@ func loadDates(w http.ResponseWriter, r *http.Request) {
 
 func loadLocation(w http.ResponseWriter, r *http.Request) []Locations {
 
+	var allLocation map[string][]Locations
+
 	url_Locations := "https://groupietrackers.herokuapp.com/api/locations"
 	response_Location, err := http.Get(url_Locations)
 	if err != nil {
@@ -219,7 +228,10 @@ func loadLocation(w http.ResponseWriter, r *http.Request) []Locations {
 	return allLocation["index"]
 }
 
-func loadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artist Artist) map[string][]string {
+func loadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artist Artist) Relations {
+
+	var json_Relation Relations
+
 	url_Relations := "https://groupietrackers.herokuapp.com/api/relation/" + id
 
 	response_Relations, err := http.Get(url_Relations)
@@ -243,16 +255,16 @@ func loadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artis
 		fmt.Println(errUnmarshall3)
 		os.Exit(0)
 	}
-
-	var data Relations
+	data := Relations{}
 	data.Id = json_Relation.Id
 	data.DateLocation = json_Relation.DateLocation
 	data.Infos = infos_artist
+	data.Coordonnees = SearchLatLon(data.DateLocation)
 
 	tRelation := template.Must(template.ParseFiles("./templates/relation.html")) // Read the relation page
 	tRelation.Execute(w, data)
 
-	return data.DateLocation
+	return data
 }
 
 func SearchArtist(w http.ResponseWriter, r *http.Request, jsonList_Artists []Artist, originalData []Artist, lettre string) []Artist {
@@ -320,10 +332,10 @@ func SortData(w http.ResponseWriter, r *http.Request, jsonList_Artists []Artist)
 }
 
 func SearchLatLon(relation map[string][]string) map[string][]string {
+	res := make(map[string][]string, len(relation))
 	for city := range relation {
-
+		city = strings.ReplaceAll(city, "-", ",")
 		url := "https://nominatim.openstreetmap.org/search?q=" + city + "&format=json"
-		fmt.Println(url)
 		response, err := http.Get(url)
 
 		if err != nil {
@@ -339,23 +351,20 @@ func SearchLatLon(relation map[string][]string) map[string][]string {
 			os.Exit(0)
 		}
 
-		var data []map[string]string
+		var data []Place
 		errUnmarshall := json.Unmarshal(body, &data)
 		if errUnmarshall != nil {
 			fmt.Println("Error3")
 			os.Exit(0)
 		}
 
-		if len(data) != 0 {
-			lat := data[0]["lat"]
-			lon := data[0]["lon"]
-			relation[city] = append(relation[city], lat)
-			relation[city] = append(relation[city], lon)
-		} else {
-			os.Exit(0)
-		}
+		var inter []string
+		inter = append(inter, data[0].Lat)
+		inter = append(inter, data[0].Lon)
+		res[city] = inter
+		inter = nil
+
 	}
-	fmt.Println("yesss")
-	fmt.Println(relation)
-	return relation
+	//fmt.Println(res)
+	return res
 }

@@ -5,6 +5,11 @@
     <link rel="icon" type="image/png" href="../static/images/logo.png"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
     <title> Location </title>
     
     <style>
@@ -16,6 +21,11 @@
     </style>
 </head>
 <body>
+    <nav class="nav">
+        <a href="">Page d'accueil</a>
+        <a href="artistes">Artistes</a>
+        <a href="location">Location</a> 
+    </nav> 
     <div id="map"></div>
     {{range $key, $value := .DateLocation}}
         <p>{{printf "%s: %s" $key $value}}</p>
