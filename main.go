@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"sort"
-	"sort"
 	"strconv"
 	"strings"
 	"text/template"
@@ -96,6 +95,12 @@ func main() {
 		tArtistes := template.Must(template.ParseFiles("./templates/artistes.html")) // Read the artists page
 		if r.FormValue("Check") != "" {
 			lettre := r.FormValue("Check")
+			jsonList_Artists = SearchArtist(w, r, jsonList_Artists, originalData, lettre)
+			lettre = ""
+		}
+		if r.FormValue("Search_artist") != "" {
+			//fmt.Println("test")
+			lettre := r.FormValue("Search_artist")
 			jsonList_Artists = SearchArtist(w, r, jsonList_Artists, originalData, lettre)
 			lettre = ""
 		}
@@ -379,9 +384,3 @@ func SearchLatLon(relation map[string][]string) map[string][]string {
 	return res
 }
 
-/*		if r.FormValue("Search_artist") != "" {
-		//fmt.Println("test")
-		lettre := r.FormValue("Search_artist")
-		jsonList_Artists = SearchArtist(w, r, jsonList_Artists, originalData, lettre)
-		lettre = ""
-	}*/
