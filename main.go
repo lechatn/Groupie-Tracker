@@ -73,16 +73,13 @@ func main() {
 
 	http.HandleFunc("/relation", func(w http.ResponseWriter, r *http.Request) {
 		id := r.URL.Query().Get("id")
-		fmt.Println(id)
 		id_int, _ := strconv.Atoi(id)
 		sort.Slice(originalData, func(i, j int) bool {
 			return originalData[i].IdArtists < originalData[j].IdArtists
 		})
 		if len(originalData) == len(jsonList_Artists) {
-			fmt.Println("cas1")
 			infos_artist = jsonList_Artists[id_int-1]
 		} else {
-			fmt.Println("cas2")
 			infos_artist = originalData[id_int-1]
 		}
 		data_artist = Server.LoadRelation(w, r, id, infos_artist)
@@ -103,4 +100,3 @@ func main() {
 	http.ListenAndServe(port, nil)
 
 }
-
