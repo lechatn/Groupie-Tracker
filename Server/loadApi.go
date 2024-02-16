@@ -85,16 +85,18 @@ func LoadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artis
 }
 
 
-
-
-
-
-
 func SearchLatLon(relation map[string][]string) map[string][]string {
 	res := make(map[string][]string, len(relation))
+	url := ""
 	for city := range relation {
 		city = strings.ReplaceAll(city, "-", ",")
-		url := "https://nominatim.openstreetmap.org/search?q=" + city + "&format=json"
+		fmt.Println(city)
+		if city == "willemstad,netherlands_antilles" {
+			url = "https://nominatim.openstreetmap.org/search?q=willemstad&format=json"
+		} else {
+			url = "https://nominatim.openstreetmap.org/search?q=" + city + "&format=json"
+		}
+
 		response, err := http.Get(url)
 
 		if err != nil {
