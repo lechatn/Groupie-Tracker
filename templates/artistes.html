@@ -2,20 +2,17 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title> Artistes </title>
-    <link rel="stylesheet" href="../static/style/style.css">
-    <script src="../js/zoom.js"></script>
-    <meta charset="UTF-8">
-    <title> Artistes </title>
-    <link rel="icon" type="image/png" href="../static/images/logo.png">
-    <link rel="stylesheet" href="../static/style/style.css">
+<meta charset="UTF-8">
+<title> Artistes </title>
+<link rel="icon" type="image/png" href="../static/images/logo.png">
+<link rel="stylesheet" href="../static/style/style.css">
 </head>
 <body background="../static/images/back_artists.jpg" class="arriere">
   <header>
     <h1 class="pres"> Présentation des artistes </h1>
     <nav class="nav1">
       <a href="home">Page d'accueil</a>
+      <a href="artistes">Artistes</a>
       <a href="location">Location</a> 
   </nav>
   </header>
@@ -27,12 +24,13 @@
   
     <form class="filter">
       <label for="sort"></label>
-      <button type="submit" name="alpha" value="alpha">A-Z</button>
-      <button type="submit" name="unalpha"  value="unalpha">Z-A</button>
-      <button type="submit" name="firstalbum" value="firstalbum">First Album</button>
-      <button type="submit" name="CreationDate" value="CreationDate">Creation Date</button>
-    </form>
-
+      <button class="button" type="submit" name="alpha" value="alpha">A-Z</button>
+      <button class="button" type="submit" name="unalpha"  value="unalpha">Z-A</button>
+      <button class="button" type="submit" name="firstalbum" value="firstalbum">First Album</button>
+      <button class="button" type="submit" name="CreationDate" value="CreationDate">Creation Date</button>
+    </form> 
+    <p>Restart</p>
+    <a class="view" href="artistes?Check=all"><button class="buton">View all the artist</button></a>
     <ul class="artistes">
       {{range .}}
       <article class="artistes-name">

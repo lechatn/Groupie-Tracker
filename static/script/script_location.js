@@ -10,7 +10,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 fetch('http://localhost:8768/locationForJs')
     .then(response => response.json())
     .then(location => {
-        var ville = [];
+        console.log(location);
         for (let j = 0; j<location.length; j++) {
             ville.push(location[j].locations);
         }
