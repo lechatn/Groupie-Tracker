@@ -18,21 +18,21 @@ func LoadArtistes(w http.ResponseWriter, r *http.Request) []structure.Artist {
 	var jsonList_Artists []structure.Artist
 	response_Artists, err := http.Get(url_Artists)
 	if err != nil {
-		fmt.Println("Error1")
-		os.Exit(1)
+		fmt.Println("Erreur de connexion a l'API :",err)
+		os.Exit(0)
 	}
 
 	defer response_Artists.Body.Close()
 
 	body_Artists, err := io.ReadAll(response_Artists.Body)
 	if err != nil {
-		fmt.Println("Error5")
-		os.Exit(1)
+		fmt.Println("Erreur de lecture de l'API :",err)
+		os.Exit(0)
 	}
 	errUnmarshall1 := json.Unmarshal(body_Artists, &jsonList_Artists)
 	if errUnmarshall1 != nil {
-		fmt.Println("Error60")
-		os.Exit(1)
+		fmt.Println("Erreur de décodage de l'API :",errUnmarshall1)
+		os.Exit(0)
 	}
 	return jsonList_Artists
 
@@ -45,23 +45,23 @@ func LoadLocation(w http.ResponseWriter, r *http.Request, data []structure.Artis
 
 		response_location, err := http.Get(url_location)
 		if err != nil {
-			fmt.Println("Error1")
-			os.Exit(1)
+			fmt.Println("Erreur de connexion à l'API :",err)
+			os.Exit(0)
 		}
 
 		defer response_location.Body.Close()
 
 		body_location, err := io.ReadAll(response_location.Body)
 		if err != nil {
-			fmt.Println("Error5")
-			os.Exit(1)
+			fmt.Println("Erreur de lecture de l'API :",err)
+			os.Exit(0)
 		}
 
 		var json_location structure.Relations
 		errUnmarshall2 := json.Unmarshal(body_location, &json_location)
 		if errUnmarshall2 != nil {
-			fmt.Println("Error60")
-			os.Exit(1)
+			fmt.Println("Erreur de décodage de l'API :",errUnmarshall2)
+			os.Exit(0)
 		}
 
 	}
@@ -76,7 +76,7 @@ func LoadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artis
 
 	response_Relations, err := http.Get(url_Relations)
 	if err != nil {
-		fmt.Println("Error4")
+		fmt.Println("Erreur de connexion à l'API :",err)
 		os.Exit(0)
 	}
 
@@ -84,7 +84,7 @@ func LoadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artis
 
 	body_Relations, err := io.ReadAll(response_Relations.Body)
 	if err != nil {
-		fmt.Println("Error5")
+		fmt.Println("Erreur de lecture de l'API :",err)
 		os.Exit(0)
 	}
 
@@ -92,7 +92,7 @@ func LoadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artis
 
 	errUnmarshall3 := json.Unmarshal(body_Relations, &json_Relation)
 	if errUnmarshall3 != nil {
-		fmt.Println(errUnmarshall3)
+		fmt.Println("Erreur de décodage de l'API :",errUnmarshall3)
 		os.Exit(0)
 	}
 
@@ -124,7 +124,7 @@ func SearchLatLon(relation map[string][]string) map[string][]string {
 		response, err := http.Get(url)
 
 		if err != nil {
-			fmt.Println("Error1")
+			fmt.Println("Erreur de connexion à l'API :",err)
 			os.Exit(0)
 		}
 
@@ -132,14 +132,14 @@ func SearchLatLon(relation map[string][]string) map[string][]string {
 
 		body, err := io.ReadAll(response.Body)
 		if err != nil {
-			fmt.Println("Error2")
+			fmt.Println("Ereur de lecture de l'API :",err)
 			os.Exit(0)
 		}
 
 		var data []structure.Place
-		errUnmarshall := json.Unmarshal(body, &data)
-		if errUnmarshall != nil {
-			fmt.Println("Error3")
+		errUnmarshall4 := json.Unmarshal(body, &data)
+		if errUnmarshall4 != nil {
+			fmt.Println("Erreur de décodage de l'API :",errUnmarshall4)
 			os.Exit(0)
 		}
 
