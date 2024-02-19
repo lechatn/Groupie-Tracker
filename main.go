@@ -101,9 +101,6 @@ func main() {
 		data_artist = structure.Relations{}
 	})
 
-	http.HandleFunc("/locationForJs", func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(location)
-	})
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
