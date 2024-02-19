@@ -106,6 +106,7 @@ h3 {
   justify-content: center;
   color: beige;
   font-family: 'Courier New', Courier, monospace;
+  margin-top: 3%;
 }
 
 .artistes {
@@ -120,14 +121,10 @@ h3 {
   grid-template-rows: 1fr 1fr;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 4rem;
-  margin-left: 40%;
-  margin-top: -70%;
+  margin-left: 30%;
+  margin-top: -75%;
   color: white;
   font-size: 1.2rem;  
-}
-
-.info :hover {
-  opacity: 1;
 }
 
 img#img.artiste {
@@ -230,6 +227,16 @@ h4 {
   text-decoration: underline;
   font-size: 1.2rem;
   color: beige;
+  animation-duration: .8s;
+  animation-name: clignoter;
+  animation-iteration-count: infinite;
+  transition: none;
+}
+
+@keyframes clignoter {
+  0%   { opacity:1; }
+  40%   {opacity:0; }
+  100% { opacity:1; }
 }
 
 .membre {
@@ -237,7 +244,6 @@ h4 {
   justify-content:center;
   text-decoration: underline;
   font-size: 1.2rem;
-  
   color: beige;
 }
 
@@ -245,7 +251,6 @@ h4 {
   display: flex;
   justify-content: center;
   color: beige;
-
 }
 
 .dateconcert {
@@ -258,5 +263,45 @@ h4 {
   display: flex;
   margin-top: 3%;
   margin-left: 42%;
-  border-radius: 30px;
+  border-radius: 40px;
+}
+
+#cone {
+  width: 5%;
+  height: 10%;
+  opacity: 0.2;
+  border-left: 300px solid transparent;
+  border-right: 300px solid transparent;
+  border-top: 500px solid #ffe4a6;
+  margin-top: -10%;
+  margin-left: -10%;
+  border-radius: 50%;
+  transform: rotate(40deg);
+  animation-duration: .2s;
+  animation-name: clignoter1;
+  animation-iteration-count: infinite;
+  transition: none;
+}
+
+#cone1 {
+  width: 5%;
+  height: 10%;
+  opacity: 0.2;
+  margin-top: -37%;
+  margin-left: 65%;
+  border-left: 300px solid transparent;
+  border-right: 300px solid transparent;
+  border-top: 500px solid #ffe4a6;
+  border-radius: 50%;
+  transform: rotate(-40deg);
+  animation-duration: .2s;
+  animation-name: clignoter1;
+  animation-iteration-count: infinite;
+  transition: none;
+}
+
+@keyframes clignoter1 {
+  0%   { opacity:0.3; }
+  40%   {opacity:0; }
+  100% { opacity:0.3; }
 }
