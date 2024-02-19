@@ -207,6 +207,7 @@ a:active span:after {
 
 .info {
   display: grid;
+  width: auto;
   grid-template-rows: 1fr 1fr;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 4rem;
