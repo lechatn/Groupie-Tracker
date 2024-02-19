@@ -1,26 +1,27 @@
 package main
 
 import (
+	"Groupie/Server"
+	"Groupie/structure"
 	"encoding/json"
 	"fmt"
 	"html/template"
 	"net/http"
 	"sort"
 	"strconv"
-	"Groupie/Server"
-	"Groupie/structure"
 )
 
 // Define all the struct and some variables
-
 
 var jsonList_Artists []structure.Artist
 
 var port = ":8768"
 
-var artist_create = false
-var originalData []structure.Artist
+var id string
 
+var artist_create = false
+
+var originalData []structure.Artist
 
 var location []structure.Locations
 
@@ -45,7 +46,7 @@ func main() {
 	})
 
 	http.HandleFunc("/artistes", func(w http.ResponseWriter, r *http.Request) {
-		if !artist_create{
+		if !artist_create {
 			jsonList_Artists = Server.LoadArtistes(w, r)
 			artist_create = true
 			originalData = jsonList_Artists
@@ -55,34 +56,50 @@ func main() {
 			lettre := r.FormValue("Check")
 			jsonList_Artists = Server.SearchArtist(w, r, jsonList_Artists, originalData, lettre)
 			lettre = ""
+			if len(jsonList_Artists) == 0 {
+				jsonList_Artists = append(jsonList_Artists, structure.Artist{Name: "No artist found", Images: "../static/images/noresult.jpg"})
+			}
 		}
 		if r.FormValue("Search_artist") != "" {
-			//fmt.Println("test")
 			lettre := r.FormValue("Search_artist")
 			jsonList_Artists = Server.SearchArtist(w, r, jsonList_Artists, originalData, lettre)
 			lettre = ""
+			if len(jsonList_Artists) == 0 {
+				jsonList_Artists = append(jsonList_Artists, structure.Artist{Name: "No artist found", Images: "../static/images/noresult.jpg"})
+			}
 		}
 		jsonList_Artists = Server.SortData(w, r, jsonList_Artists)
 		tArtistes.Execute(w, jsonList_Artists)
 	})
 
-
 	http.HandleFunc("/location", func(w http.ResponseWriter, r *http.Request) {
-		Server.LoadLocation(w,r,Server.LoadArtistes(w,r))
+		Server.LoadLocation(w, r, Server.LoadArtistes(w, r))
+	})
+	http.HandleFunc("/loading", func(w http.ResponseWriter, r *http.Request) {
+		tloading := template.Must(template.ParseFiles("./templates/loading.html"))
+		id = r.URL.Query().Get("id")
+		redirect := false
+		go func() {
+			id_int, _ := strconv.Atoi(id)
+			sort.Slice(originalData, func(i, j int) bool {
+				return originalData[i].IdArtists < originalData[j].IdArtists
+			})
+
+			if len(originalData) == len(jsonList_Artists) {
+				infos_artist = jsonList_Artists[id_int-1]
+			} else {
+				infos_artist = originalData[id_int-1]
+			}
+			data_artist = Server.LoadRelation(w, r, id, infos_artist)
+			redirect = true
+		}()
+		if !redirect {
+			tloading.Execute(w, id)
+		}
 	})
 
 	http.HandleFunc("/relation", func(w http.ResponseWriter, r *http.Request) {
-		id := r.URL.Query().Get("id")
-		id_int, _ := strconv.Atoi(id)
-		sort.Slice(originalData, func(i, j int) bool {
-			return originalData[i].IdArtists < originalData[j].IdArtists
-		})
-		if len(originalData) == len(jsonList_Artists) {
-			infos_artist = jsonList_Artists[id_int-1]
-		} else {
-			infos_artist = originalData[id_int-1]
-		}
-		data_artist = Server.LoadRelation(w, r, id, infos_artist)
+		Server.LoadRelation(w, r, id, infos_artist)
 	})
 
 	http.HandleFunc("/relationForJs", func(w http.ResponseWriter, r *http.Request) {

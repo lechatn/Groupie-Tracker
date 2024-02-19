@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
 <title> Artists </title>
@@ -33,7 +34,8 @@
     <ul class="artistes">
       {{range .}}
       <article class="artistes-name">
-    <a href="relation?id={{.IdArtists}}"><img class ="artiste" src="{{.Images}}" alt="artistes" id="img"></a>
+    <a href="loading?id={{.IdArtists}}"><img class ="artiste" src="{{.Images}}" alt="artistes" id="img"></a>
+    <!-- <a href="relation?id={{.IdArtists}}"><img class ="artiste" src="{{.Images}}" alt="artistes" id="img"></a> -->
     <h4>{{.Name}}</h4>
       <p class="info"> Click on the artist for more information !</p>
       </article>
@@ -41,3 +43,5 @@
     </ul>
   </main> 
 </body>
+
+</html>
