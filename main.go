@@ -56,11 +56,17 @@ func main() {
 			lettre := r.FormValue("Check")
 			jsonList_Artists = Server.SearchArtist(w, r, jsonList_Artists, originalData, lettre)
 			lettre = ""
+			if len(jsonList_Artists) == 0 {
+				jsonList_Artists = append(jsonList_Artists, structure.Artist{Name: "No artist found", Images: "../static/images/noresult.jpg"})
+			}
 		}
 		if r.FormValue("Search_artist") != "" {
 			lettre := r.FormValue("Search_artist")
 			jsonList_Artists = Server.SearchArtist(w, r, jsonList_Artists, originalData, lettre)
 			lettre = ""
+			if len(jsonList_Artists) == 0 {
+				jsonList_Artists = append(jsonList_Artists, structure.Artist{Name: "No artist found", Images: "../static/images/noresult.jpg"})
+			}
 		}
 		jsonList_Artists = Server.SortData(w, r, jsonList_Artists)
 		tArtistes.Execute(w, jsonList_Artists)
