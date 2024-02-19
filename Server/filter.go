@@ -46,7 +46,9 @@ func SortData(w http.ResponseWriter, r *http.Request, jsonList_Artists []structu
 	order2 := r.FormValue("unalpha")
 	order3 := r.FormValue("firstalbum")
 	order4 := r.FormValue("CreationDate")
-	if order1 == "" && order2 == "" && order3 == "" && order4 == "" {
+	order5 := r.FormValue("mostArtists")
+	order6 := r.FormValue("lessArtists")
+	if order1 == "" && order2 == "" && order3 == "" && order4 == "" && order5 == "" && order6 == ""{
 		return jsonList_Artists
 	}
 	if order1 != "" {
@@ -70,6 +72,14 @@ func SortData(w http.ResponseWriter, r *http.Request, jsonList_Artists []structu
 	} else if order4 != "" {
 		sort.Slice(jsonList_Artists, func(i, j int) bool {
 			return jsonList_Artists[i].CreationDate < jsonList_Artists[j].CreationDate
+		})
+	} else if order5 != "" {
+		sort.Slice(jsonList_Artists, func(i, j int) bool {
+			return len(jsonList_Artists[i].Members) > len(jsonList_Artists[j].Members)
+		})
+	} else if order6 != "" {
+		sort.Slice(jsonList_Artists, func(i, j int) bool {
+			return len(jsonList_Artists[i].Members) < len(jsonList_Artists[j].Members)
 		})
 	}
 	return jsonList_Artists
