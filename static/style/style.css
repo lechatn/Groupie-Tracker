@@ -61,18 +61,18 @@ nav a {
   color: #ffffff;
   background: transparent;
   height: 50px;
-  margin-left: 1%;
-  padding: 0 10px;
+  margin-left: 10%;
   font-size: 17px;
   transition: .5s;
   width: 12rem;
 }
 
 nav a:hover {
+  
   background: rgb(194, 4, 194);
   border-radius: 20px;
   width: 140px;
-  height: 30px;
+  height: 2.2rem;
 }
 
 .color {
@@ -109,6 +109,7 @@ h3 {
 }
 
 .artistes {
+  margin-top: 5%;
   display: grid;
   grid-template-rows: 1fr 1fr;
   grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -174,7 +175,8 @@ h4 {
 .filter {
   display: flex;
   justify-content: space-between;
-  width: 20rem;
+  gap: 20px;
+  width: 30rem;
 }
 
 .view {
@@ -189,6 +191,8 @@ h4 {
 }
 
 .buton {
+  margin-left: 6%;
+  margin-top: -10%;
   cursor: pointer;
 }
 
@@ -233,7 +237,7 @@ h4 {
   justify-content:center;
   text-decoration: underline;
   font-size: 1.2rem;
-  margin-top: 5%;
+  
   color: beige;
 }
 
@@ -241,6 +245,7 @@ h4 {
   display: flex;
   justify-content: center;
   color: beige;
+
 }
 
 .dateconcert {
@@ -249,3 +254,9 @@ h4 {
   color: beige;
 }
 
+.imgrelation {
+  display: flex;
+  margin-top: 3%;
+  margin-left: 42%;
+  border-radius: 30px;
+}
