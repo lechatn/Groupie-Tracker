@@ -4,7 +4,7 @@ import (
 	"Groupie/structure"
 	"encoding/json"
 	"fmt"
-	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
@@ -24,7 +24,7 @@ func LoadArtistes(w http.ResponseWriter, r *http.Request) []structure.Artist {
 
 	defer response_Artists.Body.Close()
 
-	body_Artists, err := io.ReadAll(response_Artists.Body)
+	body_Artists, err := ioutil.ReadAll(response_Artists.Body)
 	if err != nil {
 		fmt.Println("Error5")
 		os.Exit(1)
@@ -51,7 +51,7 @@ func LoadLocation(w http.ResponseWriter, r *http.Request, data []structure.Artis
 
 		defer response_location.Body.Close()
 
-		body_location, err := io.ReadAll(response_location.Body)
+		body_location, err := ioutil.ReadAll(response_location.Body)
 		if err != nil {
 			fmt.Println("Error5")
 			os.Exit(1)
@@ -82,7 +82,7 @@ func LoadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artis
 
 	defer response_Relations.Body.Close()
 
-	body_Relations, err := io.ReadAll(response_Relations.Body)
+	body_Relations, err := ioutil.ReadAll(response_Relations.Body)
 	if err != nil {
 		fmt.Println("Error5")
 		os.Exit(0)
@@ -123,7 +123,7 @@ func SearchLatLon(relation map[string][]string) map[string][]string {
 
 		defer response.Body.Close()
 
-		body, err := io.ReadAll(response.Body)
+		body, err := ioutil.ReadAll(response.Body)
 		if err != nil {
 			fmt.Println("Error2")
 			os.Exit(0)
@@ -146,6 +146,5 @@ func SearchLatLon(relation map[string][]string) map[string][]string {
 	//fmt.Println(res)
 	return res
 }
-
 
 //Probleme API a l id 47, ville inconnu

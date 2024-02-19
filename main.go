@@ -17,7 +17,10 @@ var jsonList_Artists []structure.Artist
 
 var port = ":8768"
 
+var id string
+
 var artist_create = false
+
 var originalData []structure.Artist
 
 var location []structure.Locations
@@ -55,7 +58,6 @@ func main() {
 			lettre = ""
 		}
 		if r.FormValue("Search_artist") != "" {
-			//fmt.Println("test")
 			lettre := r.FormValue("Search_artist")
 			jsonList_Artists = Server.SearchArtist(w, r, jsonList_Artists, originalData, lettre)
 			lettre = ""
@@ -67,22 +69,31 @@ func main() {
 	http.HandleFunc("/location", func(w http.ResponseWriter, r *http.Request) {
 		Server.LoadLocation(w, r, Server.LoadArtistes(w, r))
 	})
+	http.HandleFunc("/loading", func(w http.ResponseWriter, r *http.Request) {
+		tloading := template.Must(template.ParseFiles("./templates/loading.html"))
+		id = r.URL.Query().Get("id")
+		redirect := false
+		go func() {
+			id_int, _ := strconv.Atoi(id)
+			sort.Slice(originalData, func(i, j int) bool {
+				return originalData[i].IdArtists < originalData[j].IdArtists
+			})
+
+			if len(originalData) == len(jsonList_Artists) {
+				infos_artist = jsonList_Artists[id_int-1]
+			} else {
+				infos_artist = originalData[id_int-1]
+			}
+			data_artist = Server.LoadRelation(w, r, id, infos_artist)
+			redirect = true
+		}()
+		if !redirect {
+			tloading.Execute(w, id)
+		}
+	})
 
 	http.HandleFunc("/relation", func(w http.ResponseWriter, r *http.Request) {
-		id := r.URL.Query().Get("id")
-		//fmt.Println(id)
-		id_int, _ := strconv.Atoi(id)
-		sort.Slice(originalData, func(i, j int) bool {
-			return originalData[i].IdArtists < originalData[j].IdArtists
-		})
-		if len(originalData) == len(jsonList_Artists) {
-			//fmt.Println("cas1")
-			infos_artist = jsonList_Artists[id_int-1]
-		} else {
-			//fmt.Println("cas2")
-			infos_artist = originalData[id_int-1]
-		}
-		data_artist = Server.LoadRelation(w, r, id, infos_artist)
+		Server.LoadRelation(w, r, id, infos_artist)
 	})
 
 	http.HandleFunc("/relationForJs", func(w http.ResponseWriter, r *http.Request) {

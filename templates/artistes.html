@@ -29,12 +29,12 @@
       <button class="button" type="submit" name="firstalbum" value="firstalbum">First Album</button>
       <button class="button" type="submit" name="CreationDate" value="CreationDate">Creation Date</button>
     </form> 
-    <p>Restart</p>
     <a class="view" href="artistes?Check=all"><button class="buton">View all the artist</button></a>
     <ul class="artistes">
       {{range .}}
       <article class="artistes-name">
-    <a href="relation?id={{.IdArtists}}"><img class ="artiste" src="{{.Images}}" alt="artistes" id="img"></a>
+    <a href="loading?id={{.IdArtists}}"><img class ="artiste" src="{{.Images}}" alt="artistes" id="img"></a>
+    <!-- <a href="relation?id={{.IdArtists}}"><img class ="artiste" src="{{.Images}}" alt="artistes" id="img"></a> -->
     <h4>{{.Name}}</h4>
     <p class="info"> Clique sur l'artiste pour avoir de plus amples informations ! </p>
       </article>
