@@ -10,6 +10,12 @@
   background-size: 100% 100%;
 }
 
+.relation {
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
 .search {
   display: flex;
   justify-content: center;
@@ -102,106 +108,10 @@ h3 {
   font-family: 'Courier New', Courier, monospace;
 }
 
-a {
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  cursor: pointer;
-  font-family: 'Roboto Condensed', sans-serif;
-  font-weight: 900;
-  margin-top: 3rem;
-  user-select: none;
-  color: rgb(255, 0, 111);
-  font-size: 0;
-  transform: translate3d(0, 0, 0);
-  filter: blur(0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-a span {
-  font-size: 40px;
-  margin: 0;
-  padding: 0;
-  display: inline-block;
-  position: relative;
-  transition: transform cubic-bezier(0.77, 0, 0.175, 1) 250ms;
-  padding: 0 0.1em;
-}
-
-a span:nth-child(0n) {
-  transition-delay: 0ms;
-}
-
-a span:nth-child(0n):after {
-  transition-delay: 0ms;
-}
-
-a span:nth-child(1n) {
-  transition-delay: 83.3333333333ms;
-}
-
-a span:nth-child(1n):after {
-  transition-delay: 83.3333333333ms;
-}
-
-a span:nth-child(2n) {
-  transition-delay: 166.6666666667ms;
-}
-
-a span:nth-child(2n):after {
-  transition-delay: 166.6666666667ms;
-}
-
-a span:nth-child(3n) {
-  transition-delay: 250ms;
-}
-
-a span:nth-child(3n):after {
-  transition-delay: 250ms;
-}
-
-a span:after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: -1%;
-  width: 102%;
-  height: 2em;
-  background: rgb(255, 0, 111);
-  transform-origin: top center;
-  transform: scaley(0.1);
-  transition: transform cubic-bezier(0.77, 0, 0.175, 1) 250ms;
-}
-
-a:hover span {
-  transform: translateY(-1em);
-}
-
-a:hover span:after {
-  transform: scaleY(1);
-}
-
-a:active span {
-  transform: translateY(0);
-  transition: transform cubic-bezier(0.77, 0, 0.175, 1) 125ms;
-  transition-delay: 0 !important;
-}
-
-a:active span:after {
-  transform: scaleY(0.5);
-  transition: transform cubic-bezier(0.77, 0, 0.175, 1) 125ms;
-  transition-delay: 0 !important;
-}
-
 .artistes {
   display: grid;
   grid-template-rows: 1fr 1fr;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-}
-
-.artistes-name :hover {
-  opacity: 0.4;
 }
 
 .info {
@@ -212,13 +122,12 @@ a:active span:after {
   margin-left: 40%;
   margin-top: -70%;
   color: white;
-  font-size: 1.2rem;
+  font-size: 1.2rem;  
 }
 
 .info :hover {
   opacity: 1;
 }
-
 
 img#img.artiste {
   display: flex;
@@ -226,6 +135,16 @@ img#img.artiste {
   margin-left: 8%;
   border: solid 4px rgb(194, 4, 194);
   border-radius: 50px;
+}
+
+.artistes-name {
+  text-align: center;
+  margin-right: 3rem;
+  color: black;
+}
+
+.artistes-name :hover {
+  opacity: 0.4;
 }
 
 .pres {
@@ -247,12 +166,6 @@ img#img.artiste {
   margin-left: 30%;
 }
 
-.artistes-name {
-  text-align: center;
-  margin-right: 3rem;
-  color: black;
-}
-
 h4 {
   color: white;
   border: none;
@@ -269,7 +182,6 @@ h4 {
   margin-left: 84%;
   height: 1.7rem;
   margin-top: -5%;
-  
 }
 
 .button {
@@ -298,10 +210,42 @@ h4 {
   width: 80%;
   justify-content: center;
   margin-left: 10%;
+  margin-top: 6%;
 }
 
 .locdesc {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;  
   font-size: 1rem;
 }
+
+.concert {
+  display: flex;
+  justify-content: center;
+  text-decoration: underline;
+  font-size: 1.2rem;
+  color: beige;
+}
+
+.membre {
+  display: flex;
+  justify-content:center;
+  text-decoration: underline;
+  font-size: 1.2rem;
+  margin-top: 5%;
+  color: beige;
+}
+
+.infoname {
+  display: flex;
+  justify-content: center;
+  color: beige;
+}
+
+.dateconcert {
+  display: grid;
+  justify-content: center;
+  color: beige;
+}
+

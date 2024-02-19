@@ -5,6 +5,7 @@
 <title> Artistes </title>
 <link rel="icon" type="image/png" href="../static/images/logo.png">
 <link rel="stylesheet" href="../static/style/style.css">
+<link rel="stylesheet" href="../static/style/span.css">
 </head>
 <body background="../static/images/back_artists.jpg" class="arriere">
   <header>
@@ -16,11 +17,10 @@
   </nav>
   </header>
   <main>
-    <form >
+    <form>
       <label for="Check"></label>
       <input class="search1" type="text" name="Check" placeholder="Search for an artist or type 'all' for all the artists">
     </form>
-  
     <form class="filter">
       <label for="sort"></label>
       <button class="button" type="submit" name="alpha" value="alpha">A-Z</button>
@@ -35,7 +35,7 @@
       <article class="artistes-name">
     <a href="relation?id={{.IdArtists}}"><img class ="artiste" src="{{.Images}}" alt="artistes" id="img"></a>
     <h4>{{.Name}}</h4>
-    <p class="info"> Clique sur l'artiste pour avoir de plus amples informations ! </p>
+      <p class="info"> Clique sur l'artiste pour avoir de plus amples informations !</p>
       </article>
       {{end}}
     </ul>
