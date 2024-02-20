@@ -251,6 +251,7 @@ h4 {
   display: flex;
   justify-content: center;
   color: beige;
+  gap: 20px;
 }
 
 .dateconcert {
@@ -262,8 +263,8 @@ h4 {
 .imgrelation {
   display: flex;
   margin-top: 3%;
-  margin-left: 42%;
   border-radius: 40px;
+  margin-left: 42%;
 }
 
 #cone {
@@ -304,4 +305,13 @@ h4 {
   0%   { opacity:0.3; }
   40%   {opacity:0; }
   100% { opacity:0.3; }
+}
+
+
+#groupename {
+  display: flex;
+  justify-content: center;
+  color: beige;
+  font-size: 1.5rem;
+  margin-top: 2%;
 }

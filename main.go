@@ -84,7 +84,10 @@ func main() {
 			sort.Slice(originalData, func(i, j int) bool {
 				return originalData[i].IdArtists < originalData[j].IdArtists
 			})
-
+			if id_int == 0 {
+				http.Redirect(w, r, "/artistes?Check=all", http.StatusSeeOther)	
+				return
+			}
 			if len(originalData) == len(jsonList_Artists) {
 				infos_artist = jsonList_Artists[id_int-1]
 			} else {
@@ -106,7 +109,6 @@ func main() {
 		json.NewEncoder(w).Encode(data_artist)
 		data_artist = structure.Relations{}
 	})
-
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 

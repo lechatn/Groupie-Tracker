@@ -19,10 +19,12 @@
         <a href="artistes">Artists</a>
     </nav>
     <img class ="imgrelation" src="{{.Infos.Images}}" alt="artistes" id="img">
+    <p id="groupename">{{.Infos.Name}} </p>
     <p class="membre"> Members :</p>
     <section class="infoname"> 
-    {{.Infos.Name}} 
-    {{.Infos.Members}}
+    {{range .Infos.Members}}
+        <p>{{.}}</p>
+    {{end}}
     </section>
     </header>
     <main>
@@ -30,7 +32,10 @@
     <p class="concert">⚠️ Don't miss the next concert of {{.Infos.Name}} ! ⚠️</p>
     <section class="dateconcert">
     {{range $key, $value := .DateLocation}}
-        <p>{{printf "%s: %s" $key $value}}</p>
+        <strong><p>{{$key}}</p></strong>
+        {{range $value}}
+        <p>{{.}}</p>
+        {{end}}
     {{end}}
     </section>
     </main>
