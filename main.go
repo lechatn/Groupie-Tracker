@@ -57,7 +57,10 @@ func main() {
 			jsonList_Artists = Server.SearchArtist(w, r, jsonList_Artists, originalData, lettre)
 			lettre = ""
 			if len(jsonList_Artists) == 0 {
-				jsonList_Artists = append(jsonList_Artists, structure.Artist{Name: "No artist found", Images: "../static/images/noresult.jpg"})
+				terror := template.Must(template.ParseFiles("./templates/error.html"))
+				terror.Execute(w,nil)
+				jsonList_Artists = originalData
+				return
 			}
 		}
 		if r.FormValue("Search_artist") != "" {
@@ -65,7 +68,10 @@ func main() {
 			jsonList_Artists = Server.SearchArtist(w, r, jsonList_Artists, originalData, lettre)
 			lettre = ""
 			if len(jsonList_Artists) == 0 {
-				jsonList_Artists = append(jsonList_Artists, structure.Artist{Name: "No artist found", Images: "../static/images/noresult.jpg"})
+				terror := template.Must(template.ParseFiles("./templates/error.html"))
+				terror.Execute(w, nil)
+				jsonList_Artists = originalData
+				return
 			}
 		}
 		jsonList_Artists = Server.SortData(w, r, jsonList_Artists)
@@ -84,10 +90,6 @@ func main() {
 			sort.Slice(originalData, func(i, j int) bool {
 				return originalData[i].IdArtists < originalData[j].IdArtists
 			})
-			if id_int == 0 {
-				http.Redirect(w, r, "/artistes?Check=all", http.StatusSeeOther)	
-				return
-			}
 			if len(originalData) == len(jsonList_Artists) {
 				infos_artist = jsonList_Artists[id_int-1]
 			} else {
