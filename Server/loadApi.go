@@ -18,7 +18,7 @@ func LoadArtistes(w http.ResponseWriter, r *http.Request) []structure.Artist {
 	var jsonList_Artists []structure.Artist
 	response_Artists, err := http.Get(url_Artists)
 	if err != nil {
-		fmt.Println("Erreur de connexion a l'API :",err)
+		fmt.Println("Erreur de connexion a l'API :", err)
 		os.Exit(0)
 	}
 
@@ -26,12 +26,12 @@ func LoadArtistes(w http.ResponseWriter, r *http.Request) []structure.Artist {
 
 	body_Artists, err := io.ReadAll(response_Artists.Body)
 	if err != nil {
-		fmt.Println("Erreur de lecture de l'API :",err)
+		fmt.Println("Erreur de lecture de l'API :", err)
 		os.Exit(0)
 	}
 	errUnmarshall1 := json.Unmarshal(body_Artists, &jsonList_Artists)
 	if errUnmarshall1 != nil {
-		fmt.Println("Erreur de décodage de l'API :",errUnmarshall1)
+		fmt.Println("Erreur de décodage de l'API :", errUnmarshall1)
 		os.Exit(0)
 	}
 	return jsonList_Artists
@@ -45,7 +45,7 @@ func LoadLocation(w http.ResponseWriter, r *http.Request, data []structure.Artis
 
 		response_location, err := http.Get(url_location)
 		if err != nil {
-			fmt.Println("Erreur de connexion à l'API :",err)
+			fmt.Println("Erreur de connexion à l'API :", err)
 			os.Exit(0)
 		}
 
@@ -53,14 +53,14 @@ func LoadLocation(w http.ResponseWriter, r *http.Request, data []structure.Artis
 
 		body_location, err := io.ReadAll(response_location.Body)
 		if err != nil {
-			fmt.Println("Erreur de lecture de l'API :",err)
+			fmt.Println("Erreur de lecture de l'API :", err)
 			os.Exit(0)
 		}
 
 		var json_location structure.Relations
 		errUnmarshall2 := json.Unmarshal(body_location, &json_location)
 		if errUnmarshall2 != nil {
-			fmt.Println("Erreur de décodage de l'API :",errUnmarshall2)
+			fmt.Println("Erreur de décodage de l'API :", errUnmarshall2)
 			os.Exit(0)
 		}
 
@@ -76,7 +76,7 @@ func LoadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artis
 
 	response_Relations, err := http.Get(url_Relations)
 	if err != nil {
-		fmt.Println("Erreur de connexion à l'API :",err)
+		fmt.Println("Erreur de connexion à l'API :", err)
 		os.Exit(0)
 	}
 
@@ -84,7 +84,7 @@ func LoadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artis
 
 	body_Relations, err := io.ReadAll(response_Relations.Body)
 	if err != nil {
-		fmt.Println("Erreur de lecture de l'API :",err)
+		fmt.Println("Erreur de lecture de l'API :", err)
 		os.Exit(0)
 	}
 
@@ -92,7 +92,7 @@ func LoadRelation(w http.ResponseWriter, r *http.Request, id string, infos_artis
 
 	errUnmarshall3 := json.Unmarshal(body_Relations, &json_Relation)
 	if errUnmarshall3 != nil {
-		fmt.Println("Erreur de décodage de l'API :",errUnmarshall3)
+		fmt.Println("Erreur de décodage de l'API :", errUnmarshall3)
 		os.Exit(0)
 	}
 
@@ -114,7 +114,12 @@ func SearchLatLon(relation map[string][]string) map[string][]string {
 	url := ""
 	for city := range relation {
 		city = strings.ReplaceAll(city, "-", ",")
-		fmt.Println(city)
+		if city == "willemstad,netherlands_antilles" {
+			url = "https://nominatim.openstreetmap.org/search?q=willemstad&format=json"
+		} else {
+			url = "https://nominatim.openstreetmap.org/search?q=" + city + "&format=json"
+		}
+
 		if city == "willemstad,netherlands_antilles" {
 			url = "https://nominatim.openstreetmap.org/search?q=willemstad&format=json"
 		} else {
@@ -124,7 +129,7 @@ func SearchLatLon(relation map[string][]string) map[string][]string {
 		response, err := http.Get(url)
 
 		if err != nil {
-			fmt.Println("Erreur de connexion à l'API :",err)
+			fmt.Println("Erreur de connexion à l'API :", err)
 			os.Exit(0)
 		}
 
@@ -132,14 +137,14 @@ func SearchLatLon(relation map[string][]string) map[string][]string {
 
 		body, err := io.ReadAll(response.Body)
 		if err != nil {
-			fmt.Println("Ereur de lecture de l'API :",err)
+			fmt.Println("Ereur de lecture de l'API :", err)
 			os.Exit(0)
 		}
 
 		var data []structure.Place
 		errUnmarshall4 := json.Unmarshal(body, &data)
 		if errUnmarshall4 != nil {
-			fmt.Println("Erreur de décodage de l'API :",errUnmarshall4)
+			fmt.Println("Erreur de décodage de l'API :", errUnmarshall4)
 			os.Exit(0)
 		}
 
@@ -150,8 +155,5 @@ func SearchLatLon(relation map[string][]string) map[string][]string {
 		inter = nil
 
 	}
-	//fmt.Println(res)
 	return res
 }
-
-//Probleme API a l id 47, ville inconnu

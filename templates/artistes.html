@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title> Artistes </title>
-  <link rel="icon" type="image/png" href="../static/images/logo.png">
-  <link rel="stylesheet" href="../static/style/style.css">
+<meta charset="UTF-8">
+<title> Artists </title>
+<link rel="icon" type="image/png" href="../static/images/logo.png">
+<link rel="stylesheet" href="../static/style/style.css">
+<link rel="stylesheet" href="../static/style/span.css">
 </head>
 <body background="../static/images/back_artists.jpg" class="arriere">
   <header>
-    <h1 class="pres"> Présentation des artistes </h1>
+    <h1 class="pres"> Presentation of the artists </h1>
     <nav class="nav1">
-      <a href="home">Page d'accueil</a>
-      <a href="artistes">Artistes</a>
+      <a href="home">Home Page</a>
+      <a href="artistes">Artists</a>
   </nav>
   </header>
   <main>
-    <form >
+    <form>
       <label for="Check"></label>
       <input class="search1" type="text" name="Check" placeholder="Search for an artist or type 'all' for all the artists">
     </form>
-  
     <form class="filter">
       <label for="sort"></label>
       <button class="button" type="submit" name="alpha" value="alpha">A-Z</button>
@@ -33,12 +34,14 @@
     <ul class="artistes">
       {{range .}}
       <article class="artistes-name">
-    <a href="relation?id={{.IdArtists}}"><img class ="artiste" src="{{.Images}}" alt="artistes" id="img"></a>
+    <a href="loading?id={{.IdArtists}}"><img class ="artiste" src="{{.Images}}" alt="artistes" id="img"></a>
+    <!-- <a href="relation?id={{.IdArtists}}"><img class ="artiste" src="{{.Images}}" alt="artistes" id="img"></a> -->
     <h4>{{.Name}}</h4>
-    <p class="info"> Clique sur l'artiste pour avoir de plus amples informations ! </p>
+      <p class="info"> Click on the artist for more information !</p>
       </article>
       {{end}}
     </ul>
   </main> 
 </body>
+
 </html>

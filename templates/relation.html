@@ -12,21 +12,30 @@
 
 <title> Location </title>
 </head>
-<body>
+<body background="../static/images/relation.jpg" class="relation">
     <header>
     <nav class="nav2">
-        <a href="/">Page d'accueil</a>
-        <a href="artistes">Artistes</a>
-    </nav> 
-    </header>
-    <div id="map"></div>
-    <section class="locdesc">
-    {{range $key, $value := .DateLocation}}
-        <p>{{printf "%s: %s" $key $value}}</p>
-    {{end}}
+        <a href="">Home Page</a>
+        <a href="artistes">Artists</a>
+    </nav>
+    <img class ="imgrelation" src="{{.Infos.Images}}" alt="artistes" id="img">
+    <p class="membre"> Members :</p>
+    <section class="infoname"> 
     {{.Infos.Name}} 
     {{.Infos.Members}}
     </section>
+    </header>
+    <main>
+    <div id="map"></div>
+    <p class="concert">⚠️ Don't miss the next concert of {{.Infos.Name}} ! ⚠️</p>
+    <section class="dateconcert">
+    {{range $key, $value := .DateLocation}}
+        <p>{{printf "%s: %s" $key $value}}</p>
+    {{end}}
+    </section>
+    </main>
+    <div id="cone"></div>
+    <div id="cone1"></div>
 </body>
 <script src="../static/script/script_relation.js"></script>
 </html>

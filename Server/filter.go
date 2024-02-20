@@ -1,11 +1,10 @@
 package Server
 
 import (
+	"Groupie/structure"
 	"net/http"
 	"sort"
 	"strings"
-	"Groupie/structure"
-	
 )
 
 func SearchArtist(w http.ResponseWriter, r *http.Request, jsonList_Artists []structure.Artist, originalData []structure.Artist, lettre string) []structure.Artist {
