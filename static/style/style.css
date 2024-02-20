@@ -60,18 +60,18 @@ nav a {
   text-decoration: none;
   color: #ffffff;
   background: transparent;
-  height: 50px;
+  height: 40px;
   margin-left: 10%;
   font-size: 17px;
   transition: .5s;
+  
   width: 12rem;
 }
 
 nav a:hover {
-  
   background: rgb(194, 4, 194);
   border-radius: 20px;
-  width: 140px;
+  width: 200px;
   height: 2.2rem;
 }
 
@@ -294,6 +294,7 @@ h4 {
   border-radius: 50%;
   transform: rotate(-40deg);
   animation-duration: .2s;
+  animation-delay: .1s;
   animation-name: clignoter1;
   animation-iteration-count: infinite;
   transition: none;
