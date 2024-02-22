@@ -1,17 +1,16 @@
-var map = L.map('map').setView([40, -0.09], 1);
-var markers = [];
-var markerClusters = L.markerClusterGroup();
+var map = L.map('map').setView([40, -0.09], 1); // Iniit the map
+var markers = []; // Define the slice for the markers
+var markerClusters = L.markerClusterGroup(); // Define the group of markers
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
+}).addTo(map); 
 
 
-fetch('http://localhost:8768/relationForJs')
-    .then(response => response.json())
+fetch('http://localhost:8768/relationForJs') // We take the data from the server
+    .then(response => response.json()) // We transform the data into json
     .then(relation => {
-        console.log(relation);
-        var myIcon = L.icon({
+        var myIcon = L.icon({ // We define our icon. The icon corresponds to the image of the artist in the API
             iconUrl: relation["Infos"]["image"],
             iconSize: [30, 30],
             iconAnchor: [12, 41],
@@ -19,31 +18,30 @@ fetch('http://localhost:8768/relationForJs')
             shadowSize: [41, 41]
         });
         for (let city in relation["Coordonnees"]) {
-            var lat = relation["Coordonnees"][city][0];
+            var lat = relation["Coordonnees"][city][0]; // We take the latitude and longitude of the city
             var lon = relation["Coordonnees"][city][1];
             var marker = L.marker([lat, lon] , {icon: myIcon});
-            cityForLocation = withHypen(city);
-            text = "En concert à " + noHypen(city) + " le " + relation["datesLocations"][cityForLocation];
+            cityForLocation = withHypen(city); // We replace the spaces by hypens for find the date of the concert in  datesLocations
+            text = "En concert à " + noHypen(city) + " le " + relation["datesLocations"][cityForLocation]; // We define the message in the popup
             marker.bindPopup(text);
 
-            markerClusters.addLayer(marker); // Nous ajoutons le marqueur aux groupes
-            markers.push(marker); // Nous ajoutons le marqueur à la liste des marqueurs 
+            markerClusters.addLayer(marker); // Add the marker to the group
+            markers.push(marker);
             
         }
-        var group = new L.featureGroup(markers); // Nous créons le groupe des marqueurs pour adapter le zoom
-        map.fitBounds(group.getBounds().pad(0.5)); // Nous demandons à ce que tous les marqueurs soient visibles, et ajoutons un padding (pad(0.5)) pour que les marqueurs ne soient pas coupés
+        var group = new L.featureGroup(markers);
+        map.fitBounds(group.getBounds().pad(0.5));
         map.addLayer(markerClusters);
-
     }
     );
 
-function noHypen (place) {
+function noHypen (place) { // Function to replace the hypens by spaces
     place = place.replace("-", " ");
     place = place.replace("_", " ");
     place = place.replace(",", " ");
     return place
 }
 
-function withHypen (place) {
+function withHypen (place) { // Function to replace the spaces by hypens
     return place.replace(",", "-");
 }
